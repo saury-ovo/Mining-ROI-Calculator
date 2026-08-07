@@ -13,10 +13,6 @@ from unit_converter import (
 logger = logging.getLogger(__name__)
 
 
-DEFAULT_HASH_GROWTH_RATE = 0.03
-MAX_ROI_SIMULATION_MONTHS = 1200
-
-
 class CalculatorError(ValueError):
     """Raised when calculator input cannot produce a meaningful result."""
 
@@ -28,7 +24,7 @@ COIN_CONFIG = {
         "algorithm": "SHA-256",
         "base_unit": "H/s",
         "hash_unit": ["TH/s", "GH/s", "PH/s"],
-        "network_hash_unit": ["TH/s", "PH/s", "EH/s"],
+        "network_hash_unit": ["EH/s", "PH/s", "TH/s"],
     },
     "LTC": {
         "key": "ltc",
@@ -194,47 +190,9 @@ def calculate_daily_revenue(total_daily_coin, coin_price):
     return total_daily_coin * coin_price
 
 
-def _simulate_monthly_cash_flows(
-    initial_daily_coin,
-    coin_price,
-    daily_electricity_cost,
-    pool_fee_percent,
-    total_investment,
-    hash_growth_rate=DEFAULT_HASH_GROWTH_RATE,
-):
-    """Simulate payback while network growth dilutes mining revenue."""
-    # Mining revenue decreases over time due to network hashrate growth.
-    monthly_profit = 0.0
-    annual_profit = 0.0
-    cumulative_cash_flow = 0.0
-    roi_months = 0 if total_investment <= 0 else None
-
-    for month in range(1, MAX_ROI_SIMULATION_MONTHS + 1):
-        dilution_factor = (1 + hash_growth_rate) ** month
-        monthly_coin = initial_daily_coin / dilution_factor * 30
-        monthly_revenue = calculate_daily_revenue(monthly_coin, coin_price)
-        monthly_pool_fee = monthly_revenue * (pool_fee_percent / 100)
-        monthly_electricity = daily_electricity_cost * 30
-        cash_flow = monthly_revenue - monthly_electricity - monthly_pool_fee
-
-        if month == 1:
-            monthly_profit = cash_flow
-        if month <= 12:
-            annual_profit += cash_flow
-
-        cumulative_cash_flow += cash_flow
-        if roi_months is None and cumulative_cash_flow >= total_investment:
-            roi_months = month
-
-        # Continue through month 12 for the annual projection after payback.
-        if roi_months is not None and month >= 12:
-            break
-
-    return {
-        "monthly_profit": monthly_profit,
-        "annual_profit": annual_profit,
-        "roi_months": roi_months,
-    }
+def _convert_base_to_unit(value, unit):
+    """Convert a normalized hashrate back to a selected display unit."""
+    return value / HASH_UNIT_FACTORS[unit]
 
 
 def calculate_roi(form_data):
@@ -280,9 +238,17 @@ def calculate_roi(form_data):
     )
     coin_price = _number(form_data, "coin_price", "Coin Price")
 
-    hashrate_share = calculate_hashrate_share(hashrate["base"], network_hashrate["base"])
-    single_miner_daily_coin = network_daily_coin_production * hashrate_share
-    total_daily_coin = single_miner_daily_coin * quantity
+    miner_total_hashrate_base = hashrate["base"] * quantity
+    original_network_hashrate_base = network_hashrate["base"]
+    if original_network_hashrate_base <= 0:
+        raise CalculatorError("Network Hashrate must be greater than 0.")
+    effective_network_hashrate_base = original_network_hashrate_base + miner_total_hashrate_base
+    hashrate_share = calculate_hashrate_share(
+        miner_total_hashrate_base,
+        effective_network_hashrate_base,
+    )
+    total_daily_coin = network_daily_coin_production * hashrate_share
+    single_miner_daily_coin = total_daily_coin / quantity
 
     total_investment = machine_price * quantity + other_cost
     daily_energy = (power / 1000) * 24 * quantity
@@ -290,20 +256,16 @@ def calculate_roi(form_data):
     daily_revenue = calculate_daily_revenue(total_daily_coin, coin_price)
     pool_fee = daily_revenue * (pool_fee_percent / 100)
     daily_profit = daily_revenue - daily_electricity_cost - pool_fee
-    simulated_cash_flow = _simulate_monthly_cash_flows(
-        total_daily_coin,
-        coin_price,
-        daily_electricity_cost,
-        pool_fee_percent,
-        total_investment,
-    )
-    monthly_profit = simulated_cash_flow["monthly_profit"]
-    annual_profit = simulated_cash_flow["annual_profit"]
-    roi_months = simulated_cash_flow["roi_months"]
-    roi_days = roi_months * 30 if roi_months is not None else None
+    monthly_profit = daily_profit * 30
+    profit_30_days = monthly_profit
+    profit_90_days = daily_profit * 90
+    annual_profit = daily_profit * 365
+    profit_365_days = annual_profit
+    roi_days = total_investment / daily_profit if daily_profit > 0 else None
+    payback_days = roi_days
     annual_roi = (annual_profit / total_investment) * 100 if total_investment > 0 else 0
     break_even_electricity_price = daily_revenue / daily_energy if daily_energy > 0 else None
-    recovery_progress = min(100, (365 / roi_days) * 100) if roi_days else 0
+    recovery_progress = min(100, (365 / payback_days) * 100) if payback_days else 0
     unrealistic_input = daily_revenue > total_investment * 10
     logger.info(
         "ROI calculation\n"
@@ -318,9 +280,11 @@ def calculate_roi(form_data):
         "coin_price: %s\n"
         "quantity: %s\n"
         "CALCULATION:\n"
-        "hashrate_share = miner_hashrate / network_hashrate\n"
-        "single_miner_daily_coin = network_daily_coin_production * hashrate_share\n"
-        "total_daily_coin = single_miner_daily_coin * quantity\n"
+        "miner_total_hashrate = hashrate * quantity\n"
+        "effective_network_hashrate = network_hashrate + miner_total_hashrate\n"
+        "hashrate_share = miner_total_hashrate / effective_network_hashrate\n"
+        "total_daily_coin = network_daily_coin_production * hashrate_share\n"
+        "single_miner_daily_coin = total_daily_coin / quantity\n"
         "revenue = total_daily_coin * coin_price\n"
         "result:\n"
         "daily_revenue: %s",
@@ -346,6 +310,15 @@ def calculate_roi(form_data):
         "network_hashrate_unit": network_hashrate["unit"],
         "network_hashrate_base": network_hashrate["base"],
         "hashrate_base_unit": coin_settings["base_unit"],
+        "original_network_hashrate_value": network_hashrate["value"],
+        "original_network_hashrate_unit": network_hashrate["unit"],
+        "miner_total_hashrate_value": hashrate["value"] * quantity,
+        "miner_total_hashrate_unit": hashrate["unit"],
+        "effective_network_hashrate_value": _convert_base_to_unit(
+            effective_network_hashrate_base,
+            network_hashrate["unit"],
+        ),
+        "effective_network_hashrate_unit": network_hashrate["unit"],
         "network_daily_coin_production": network_daily_coin_production,
         "hashrate_share": hashrate_share,
         "mining_share_percent": hashrate_share * 100,
@@ -361,7 +334,11 @@ def calculate_roi(form_data):
         "daily_profit": daily_profit,
         "monthly_profit": monthly_profit,
         "annual_profit": annual_profit,
+        "profit_30_days": profit_30_days,
+        "profit_90_days": profit_90_days,
+        "profit_365_days": profit_365_days,
         "roi_days": roi_days,
+        "payback_days": payback_days,
         "annual_roi": annual_roi,
         "break_even_electricity_price": break_even_electricity_price,
         "recovery_progress": recovery_progress,

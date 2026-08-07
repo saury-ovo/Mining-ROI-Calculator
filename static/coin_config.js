@@ -2,7 +2,7 @@
 window.COIN_CONFIG = {
     BTC: {
         ticker: 'BTC', key: 'btc', name: 'Bitcoin', icon: '/static/images/coins/btc.svg', algorithm: 'SHA-256',
-        hash_unit: ['TH/s', 'GH/s', 'PH/s'], network_hash_unit: ['TH/s', 'PH/s', 'EH/s'],
+        hash_unit: ['TH/s', 'GH/s', 'PH/s'], network_hash_unit: ['EH/s', 'PH/s', 'TH/s'],
     },
     LTC: {
         ticker: 'LTC', key: 'ltc', name: 'Litecoin', icon: '/static/images/coins/ltc.svg', algorithm: 'Scrypt',

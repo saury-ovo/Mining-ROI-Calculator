@@ -83,8 +83,8 @@
             <div class="col-xl-5">
                 <article class="dashboard-panel roi-panel h-100">
                     <div class="panel-heading"><div><p class="eyebrow mb-2" data-i18n="result.roiAnalysis">ROI ANALYSIS</p><h2 data-i18n="result.capitalRecovery">Capital recovery</h2></div><i class="bi bi-three-dots panel-menu"></i></div>
-                    <div class="payback-display"><span data-i18n="result.paybackPeriod">PAYBACK PERIOD</span><strong>{% if results['roi_days'] is not none %}{% if results['roi_days'] < 0.005 %}<span data-i18n="result.lessThanOneDay">&lt;1 Day</span>{% else %}{{ '%.2f'|format(results['roi_days']) }} <small data-i18n="units.days">DAYS</small>{% endif %}{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
-                    <div class="progress-label"><span data-i18n="result.recoveryView">365-DAY RECOVERY VIEW</span><span>{% if results['roi_days'] is not none %}{{ '%.0f'|format(results['recovery_progress']) }}%{% else %}0%{% endif %}</span></div>
+                    <div class="payback-display"><span data-i18n="result.paybackPeriod">PAYBACK PERIOD</span><strong>{% if results['payback_days'] is not none %}{% if results['payback_days'] < 0.005 %}<span data-i18n="result.lessThanOneDay">&lt;1 Day</span>{% else %}{{ '%.2f'|format(results['payback_days']) }} <small data-i18n="units.days">DAYS</small>{% endif %}{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
+                    <div class="progress-label"><span data-i18n="result.recoveryView">365-DAY RECOVERY VIEW</span><span>{% if results['payback_days'] is not none %}{{ '%.0f'|format(results['recovery_progress']) }}%{% else %}0%{% endif %}</span></div>
                     <div class="progress recovery-progress"><div class="progress-bar" style="width: {{ results['recovery_progress'] }}%"></div></div>
                     <div class="roi-list">
                         <div><span data-i18n="result.monthlyProfit">Monthly Profit</span><strong class="{% if results['monthly_profit'] < 0 %}negative{% endif %}">{{ '${:,.2f}'.format(results['monthly_profit']) }}</strong></div>
@@ -101,6 +101,10 @@
             <div class="calculation-grid">
                 <div><span data-i18n="result.networkDailyProduction">Network Daily Production</span><strong>{{ '%.8f'|format(results['network_daily_coin_production']) }} {{ results['coin'] }}/day</strong></div>
                 <div><span data-i18n="result.miningShare">Mining Share</span><strong>{{ '%.4f'|format(results['mining_share_percent']) }}%</strong></div>
+                <div><span>Original Network Hashrate</span><strong>{{ '%.6g'|format(results['original_network_hashrate_value']) }} {{ results['original_network_hashrate_unit'] }}</strong></div>
+                <div><span>My Total Hashrate</span><strong>{{ '%.6g'|format(results['miner_total_hashrate_value']) }} {{ results['miner_total_hashrate_unit'] }}</strong></div>
+                <div><span>Effective Network Hashrate</span><strong>{{ '%.6g'|format(results['effective_network_hashrate_value']) }} {{ results['effective_network_hashrate_unit'] }}</strong></div>
+                <div><span>Actual Miner Share</span><strong>{{ '%.6f'|format(results['hashrate_share'] * 100) }}%</strong></div>
                 <div><span data-i18n="result.estimatedDailyCoin">Estimated Daily Coin</span><strong>{{ '%.8f'|format(results['estimated_daily_coin']) }} {{ results['coin'] }}/day</strong></div>
                 <div><span data-i18n="result.coinPriceDetail">Coin price</span><strong>${{ '{:,.2f}'.format(results['coin_price']) }}</strong></div>
                 <div class="calculation-formula"><span data-i18n="result.revenueFormula">total coin × price</span></div>

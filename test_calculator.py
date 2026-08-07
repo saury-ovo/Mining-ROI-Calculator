@@ -1,11 +1,6 @@
 import unittest
 
-from calculator import (
-    DEFAULT_HASH_GROWTH_RATE,
-    CalculatorError,
-    COIN_CONFIG,
-    calculate_roi,
-)
+from calculator import CalculatorError, COIN_CONFIG, calculate_roi
 from unit_converter import convert_hashrate
 
 
@@ -42,20 +37,22 @@ class CalculatorTests(unittest.TestCase):
 
     def test_btc_network_model(self):
         result = calculate_roi(make_form("BTC", 1, "TH/s", 1, "PH/s", 200, 65000))
-        self.assertAlmostEqual(result["hashrate_share"], 0.001)
-        self.assertAlmostEqual(result["mining_share_percent"], 0.1)
-        self.assertAlmostEqual(result["single_miner_daily_coin"], 0.2)
-        self.assertAlmostEqual(result["total_daily_coin"], 0.2)
-        self.assertAlmostEqual(result["daily_revenue"], 13000)
+        expected_share = 0.001 / 1.001
+        self.assertAlmostEqual(result["hashrate_share"], expected_share)
+        self.assertAlmostEqual(result["mining_share_percent"], expected_share * 100)
+        self.assertAlmostEqual(result["single_miner_daily_coin"], 200 * expected_share)
+        self.assertAlmostEqual(result["total_daily_coin"], 200 * expected_share)
+        self.assertAlmostEqual(result["daily_revenue"], 200 * expected_share * 65000)
 
     def test_zec_network_model_and_quantity(self):
         result = calculate_roi(make_form("ZEC", 840, "kSol/s", 1, "MSol/s", 1440, 507, quantity="3"))
         self.assertAlmostEqual(result["hashrate_base"], 840000)
         self.assertAlmostEqual(result["network_hashrate_base"], 1000000)
-        self.assertAlmostEqual(result["hashrate_share"], 0.84)
-        self.assertAlmostEqual(result["single_miner_daily_coin"], 1209.6)
-        self.assertAlmostEqual(result["total_daily_coin"], 3628.8)
-        self.assertAlmostEqual(result["daily_revenue"], 1839801.6)
+        expected_share = 2.52 / 3.52
+        self.assertAlmostEqual(result["hashrate_share"], expected_share)
+        self.assertAlmostEqual(result["single_miner_daily_coin"], 1440 * expected_share / 3)
+        self.assertAlmostEqual(result["total_daily_coin"], 1440 * expected_share)
+        self.assertAlmostEqual(result["daily_revenue"], 1440 * expected_share * 507)
 
     def test_equivalent_hashrate_units_produce_same_revenue(self):
         first = calculate_roi(make_form("ZEC", 840, "kSol/s", 1, "MSol/s", 0.01, 50, quantity="3"))
@@ -81,9 +78,9 @@ class CalculatorTests(unittest.TestCase):
         for coin, values in units.items():
             with self.subTest(coin=coin):
                 result = calculate_roi(make_form(coin, *values, 10, 2))
-                self.assertAlmostEqual(result["hashrate_share"], 0.5)
-                self.assertAlmostEqual(result["total_daily_coin"], 5)
-                self.assertAlmostEqual(result["daily_revenue"], 10)
+                self.assertAlmostEqual(result["hashrate_share"], 1 / 3)
+                self.assertAlmostEqual(result["total_daily_coin"], 10 / 3)
+                self.assertAlmostEqual(result["daily_revenue"], 20 / 3)
                 self.assertEqual(result["algorithm"], COIN_CONFIG[coin]["algorithm"])
 
     def test_lowercase_coin_keys_are_accepted(self):
@@ -103,18 +100,43 @@ class CalculatorTests(unittest.TestCase):
                 result = calculate_roi(form)
                 self.assertEqual(result["coin"], coin)
 
-    def test_hashrate_dilution_changes_monthly_roi_projection(self):
-        form = make_form("BTC", 1, "TH/s", 1, "PH/s", 200, 65000)
+    def test_hashrate_dilution_uses_total_miner_hashrate(self):
+        form = make_form("BTC", 10, "PH/s", 100, "PH/s", 200, 65000, quantity="1")
         result = calculate_roi(form)
 
-        current_daily_profit = result["daily_profit"]
-        expected_first_month_revenue = result["daily_revenue"] * 30 / (1 + DEFAULT_HASH_GROWTH_RATE)
-        expected_first_month_profit = expected_first_month_revenue - result["daily_electricity_cost"] * 30
+        expected_share = 10 / (100 + 10)
+        self.assertAlmostEqual(result["hashrate_share"], expected_share)
+        self.assertAlmostEqual(result["total_daily_coin"], 200 * expected_share)
+        self.assertAlmostEqual(result["miner_total_hashrate_value"], 10)
+        self.assertAlmostEqual(result["effective_network_hashrate_value"], 110)
+        self.assertAlmostEqual(result["daily_revenue"], 200 * expected_share * 65000)
 
-        self.assertAlmostEqual(result["monthly_profit"], expected_first_month_profit)
-        self.assertLess(result["monthly_profit"], current_daily_profit * 30)
-        self.assertGreater(result["annual_profit"], 0)
-        self.assertIsNotNone(result["roi_days"])
+    def test_quantity_is_applied_once_to_diluted_share(self):
+        form = make_form("DASH", 10, "GH/s", 100, "GH/s", 100, 50, quantity="3")
+        result = calculate_roi(form)
+
+        expected_share = 30 / (100 + 30)
+        self.assertAlmostEqual(result["hashrate_share"], expected_share)
+        self.assertAlmostEqual(result["total_daily_coin"], 100 * expected_share)
+        self.assertAlmostEqual(result["single_miner_daily_coin"], 100 * expected_share / 3)
+
+    def test_btc_eh_network_hashrate_conversion(self):
+        form = make_form("BTC", 1, "PH/s", 900, "EH/s", 200, 65000)
+        result = calculate_roi(form)
+        self.assertEqual(result["network_hashrate_unit"], "EH/s")
+        self.assertEqual(result["network_hashrate_base"], 900 * 10**18)
+        self.assertAlmostEqual(result["effective_network_hashrate_value"], 900.001)
+        self.assertAlmostEqual(result["hashrate_share"], 1 / (900000 + 1))
+
+    def test_legacy_growth_model_is_removed(self):
+        import calculator
+
+        self.assertFalse(hasattr(calculator, "HASHRATE_GROWTH_RATE"))
+
+    def test_payback_days_use_daily_profit(self):
+        result = calculate_roi(make_form("BTC", 1, "TH/s", 1, "PH/s", 200, 65000))
+        expected_payback_days = result["total_investment"] / result["daily_profit"]
+        self.assertAlmostEqual(result["payback_days"], expected_payback_days)
 
     def test_dilution_is_supported_for_btc_dash_and_ltc(self):
         forms = {
@@ -133,7 +155,8 @@ class CalculatorTests(unittest.TestCase):
         form = make_form("BTC", 1, "TH/s", 1, "PH/s", 200, 65000)
         form["daily_coin_output"] = "999999"
         result = calculate_roi(form)
-        self.assertAlmostEqual(result["daily_revenue"], 13000)
+        expected_share = 0.001 / 1.001
+        self.assertAlmostEqual(result["daily_revenue"], 200 * expected_share * 65000)
         self.assertNotIn("daily_coin_output", result)
 
     def test_network_daily_production_is_required(self):
