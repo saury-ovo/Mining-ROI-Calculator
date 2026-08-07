@@ -124,4 +124,4 @@ python -B -m unittest -v test_calculator.py
 
 ## License
 
-For personal and internal analytical use.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
