@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             syncCoinFields();
             renderSelectedCoin();
             renderCoinOptions();
+            updateInputMonitor();
         });
         coinDropdownButton?.addEventListener('click', () => {
             setDropdownOpen(coinDropdownButton.getAttribute('aria-expanded') !== 'true');
@@ -184,6 +185,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         input.value = value;
     };
+
+    const monitorRequiredFields = [
+        'miner_name',
+        'coin',
+        'hashrate',
+        'network_hashrate',
+        'quantity',
+        'machine_price',
+        'power_consumption',
+        'electricity_price',
+        'network_daily_coin_production',
+        'coin_price',
+    ];
+
+    const readMonitorNumber = (id) => {
+        const input = document.getElementById(id);
+        if (!input) return null;
+        const rawValue = input.value.trim();
+        if (!rawValue || rawValue === '.' || rawValue.endsWith('.')) return null;
+        const numericValue = Number(rawValue);
+        return Number.isFinite(numericValue) ? numericValue : null;
+    };
+
+    const isMonitorFieldReady = (id) => {
+        if (id === 'miner_name') return Boolean(document.getElementById(id)?.value.trim());
+        if (id === 'coin') return Boolean(getCoinSettings());
+        const input = document.getElementById(id);
+        const value = readMonitorNumber(id);
+        if (!input || value === null) return false;
+        if (id === 'quantity') return Number.isInteger(value);
+        return value >= 0;
+    };
+
+    const formatMonitorValue = (value, digits = 2) => (
+        Number.isFinite(value) ? value.toFixed(digits) : '--'
+    );
+
+    const updateInputMonitor = () => {
+        const readiness = document.getElementById('live-input-readiness');
+        const totalPower = document.getElementById('live-total-power');
+        const machinePowerCost = document.getElementById('live-machine-power-cost');
+        const selectedCoin = document.getElementById('live-selected-coin');
+        const selectedAlgorithm = document.getElementById('live-selected-algorithm');
+
+        if (readiness) {
+            const readyCount = monitorRequiredFields.reduce(
+                (count, field) => count + (isMonitorFieldReady(field) ? 1 : 0),
+                0,
+            );
+            readiness.textContent = `${readyCount} / ${monitorRequiredFields.length}`;
+        }
+
+        const power = readMonitorNumber('power_consumption');
+        const quantity = readMonitorNumber('quantity');
+        const electricityPrice = readMonitorNumber('electricity_price');
+
+        if (totalPower) {
+            const totalPowerKw = power !== null && quantity !== null
+                ? power * quantity / 1000
+                : null;
+            totalPower.textContent = formatMonitorValue(totalPowerKw);
+        }
+
+        if (machinePowerCost) {
+            const dailyCost = power !== null && electricityPrice !== null
+                ? power / 1000 * 24 * electricityPrice
+                : null;
+            machinePowerCost.textContent = dailyCost === null
+                ? '--'
+                : `$${formatMonitorValue(dailyCost)}`;
+        }
+
+        const settings = getCoinSettings();
+        if (selectedCoin) selectedCoin.textContent = settings ? (settings.ticker || getCoinId(coinSelect.value)) : '--';
+        if (selectedAlgorithm) selectedAlgorithm.textContent = settings?.algorithm || '--';
+    };
+
+    monitorRequiredFields.forEach((field) => {
+        const input = document.getElementById(field);
+        input?.addEventListener('input', () => {
+            // Keep the in-progress string untouched; the monitor parses a snapshot only.
+            input.dataset.pendingValue = input.value;
+            updateInputMonitor();
+        });
+    });
+    [hashrateUnitSelect, networkHashrateUnitSelect].forEach((select) => {
+        select?.addEventListener('change', updateInputMonitor);
+    });
+    updateInputMonitor();
 
     decimalInputs.forEach((input) => {
         input.addEventListener('input', () => {

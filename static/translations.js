@@ -315,6 +315,46 @@
     translations.es.result.miningShare = 'Participaci\u00f3n minera';
     translations.es.result.estimatedDailyCoin = 'Monedas diarias estimadas';
 
+    const monitorTranslations = {
+        en: {
+            common: { roiTerminal: 'ROI TERMINAL', modelLive: 'LIVE', window24h: '24H', storageLocal: 'LOCAL', panelInput: 'INPUT / 01', panelLive: 'LIVE / 01', chartWindow: '24H / USD' },
+            index: { telemetryModel: 'MODEL', telemetryWindow: 'WINDOW', telemetryStore: 'STORE', identity: 'IDENTITY', computeProfile: 'COMPUTE PROFILE', operatingAssumptions: 'OPERATING ASSUMPTIONS', monitorTitle: 'OPERATING MONITOR', monitorSubtitle: 'Secondary operating signals', monitorInputStatus: 'INPUT READINESS', totalPowerLoad: 'Total Power Load', perMachinePowerCost: 'Per-Machine Daily Power Cost', selectedAsset: 'Selected Asset', monitorDescription: 'Secondary signals update from your current inputs. Core ROI results appear after submission.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / MACHINE / DAY' },
+            result: { auditTrail: 'AUDIT TRAIL' },
+        },
+        zh: {
+            common: { roiTerminal: '\u6536\u76ca\u7ec8\u7aef', modelLive: '\u5b9e\u65f6', window24h: '24\u5c0f\u65f6', storageLocal: '\u672c\u5730', panelInput: '\u8f93\u5165 / 01', panelLive: '\u5b9e\u65f6 / 01', chartWindow: '24\u5c0f\u65f6 / \u7f8e\u5143' },
+            index: { telemetryModel: '\u6a21\u578b', telemetryWindow: '\u5468\u671f', telemetryStore: '\u5b58\u50a8', identity: '\u8d44\u4ea7\u8eab\u4efd', computeProfile: '\u7b97\u529b\u914d\u7f6e', operatingAssumptions: '\u8fd0\u8425\u5047\u8bbe', monitorTitle: '\u8fd0\u8425\u76d1\u89c6', monitorSubtitle: '\u8f93\u5165\u8fd0\u8425\u4fe1\u53f7', monitorInputStatus: '\u8f93\u5165\u5c31\u7eea\u5ea6', totalPowerLoad: '\u603b\u529f\u7387\u8d1f\u8f7d', perMachinePowerCost: '\u5355\u53f0\u6bcf\u65e5\u7535\u529b\u6210\u672c', selectedAsset: '\u5f53\u524d\u8d44\u4ea7', monitorDescription: '\u4e8c\u7ea7\u4fe1\u53f7\u968f\u5f53\u524d\u8f93\u5165\u66f4\u65b0\u3002\u6838\u5fc3 ROI \u7ed3\u679c\u5c06\u5728\u63d0\u4ea4\u540e\u663e\u793a\u3002' },
+            units: { kilowatt: '\u5343\u74e6', usdMachineDay: '\u7f8e\u5143 / \u5355\u53f0 / \u65e5' },
+            result: { auditTrail: '\u5ba1\u8ba1\u8f68\u8ff9' },
+        },
+        ja: {
+            common: { roiTerminal: 'ROI \u30bf\u30fc\u30df\u30ca\u30eb', modelLive: '\u30e9\u30a4\u30d6', window24h: '24\u6642\u9593', storageLocal: '\u30ed\u30fc\u30ab\u30eb', panelInput: '\u5165\u529b / 01', panelLive: '\u30e9\u30a4\u30d6 / 01', chartWindow: '24\u6642\u9593 / USD' },
+            index: { telemetryModel: '\u30e2\u30c7\u30eb', telemetryWindow: '\u671f\u9593', telemetryStore: '\u4fdd\u5b58\u5148', identity: '\u30a2\u30bb\u30c3\u30c8\u60c5\u5831', computeProfile: '\u30b3\u30f3\u30d4\u30e5\u30fc\u30c8\u8a2d\u5b9a', operatingAssumptions: '\u904b\u7528\u524d\u63d0', monitorTitle: '\u904b\u7528\u30e2\u30cb\u30bf\u30fc', monitorSubtitle: '\u4e8c\u6b21\u904b\u7528\u30b7\u30b0\u30ca\u30eb', monitorInputStatus: '\u5165\u529b\u6e96\u5099\u5ea6', totalPowerLoad: '\u7dcf\u96fb\u529b\u8ca0\u8377', perMachinePowerCost: '\u30de\u30b7\u30f3\u5358\u4f4d\u306e\u65e5\u6b21\u96fb\u6c17\u4ee3', selectedAsset: '\u9078\u629e\u8cc7\u7523', monitorDescription: '\u4e8c\u6b21\u30b7\u30b0\u30ca\u30eb\u306f\u5165\u529b\u306b\u5fdc\u3058\u3066\u66f4\u65b0\u3055\u308c\u307e\u3059\u3002\u4e3b\u8981 ROI \u7d50\u679c\u306f\u9001\u4fe1\u5f8c\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / \u53f0 / \u65e5' },
+            result: { auditTrail: '\u76e3\u67fb\u30c8\u30ec\u30fc\u30b9' },
+        },
+        ko: {
+            common: { roiTerminal: 'ROI \ud130\ubbf8\ub110', modelLive: '\uc2e4\uc2dc\uac04', window24h: '24\uc2dc\uac04', storageLocal: '\ub85c\uceec', panelInput: '\uc785\ub825 / 01', panelLive: '\uc2e4\uc2dc\uac04 / 01', chartWindow: '24\uc2dc\uac04 / USD' },
+            index: { telemetryModel: '\ubaa8\ub378', telemetryWindow: '\uae30\uac04', telemetryStore: '\uc800\uc7a5', identity: '\uc790\uc0b0 \uc815\ubcf4', computeProfile: '\uc5f0\uc0b0 \ud504\ub85c\ud30c\uc77c', operatingAssumptions: '\uc6b4\uc601 \uac00\uc815', monitorTitle: '\uc6b4\uc601 \ubaa8\ub2c8\ud130', monitorSubtitle: '\uc785\ub825 \uae30\ubc18 \ubcf4\uc870 \uc2e0\ud638', monitorInputStatus: '\uc785\ub825 \uc900\ube44\ub3c4', totalPowerLoad: '\ucd1d \uc804\ub825 \ubd80\ud558', perMachinePowerCost: '\uba38\uc2e0\ubcc4 \uc77c\uc77c \uc804\ub825\ube44', selectedAsset: '\uc120\ud0dd \uc790\uc0b0', monitorDescription: '\ubcf4\uc870 \uc2e0\ud638\ub294 \ud604\uc7ac \uc785\ub825\uc5d0 \ub530\ub77c \uc5c5\ub370\uc774\ud2b8\ub429\ub2c8\ub2e4. \ud575\uc2ec ROI \uacb0\uacfc\ub294 \uc81c\ucd9c \ud6c4 \ud45c\uc2dc\ub429\ub2c8\ub2e4.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / \ub300 / \uc77c' },
+            result: { auditTrail: '\uac80\uc99d \uae30\ub85d' },
+        },
+        es: {
+            common: { roiTerminal: 'TERMINAL ROI', modelLive: 'EN VIVO', window24h: '24H', storageLocal: 'LOCAL', panelInput: 'ENTRADA / 01', panelLive: 'EN VIVO / 01', chartWindow: '24H / USD' },
+            index: { telemetryModel: 'MODELO', telemetryWindow: 'PERIODO', telemetryStore: 'GUARDADO', identity: 'IDENTIDAD', computeProfile: 'PERFIL DE C\u00d3MPUTO', operatingAssumptions: 'SUPUESTOS OPERATIVOS', monitorTitle: 'MONITOR OPERATIVO', monitorSubtitle: 'Se\u00f1ales operativas secundarias', monitorInputStatus: 'PREPARACI\u00d3N DE ENTRADA', totalPowerLoad: 'Carga total de potencia', perMachinePowerCost: 'Coste el\u00e9ctrico diario por m\u00e1quina', selectedAsset: 'Activo seleccionado', monitorDescription: 'Las se\u00f1ales secundarias se actualizan con las entradas actuales. Los resultados ROI aparecen despu\u00e9s del env\u00edo.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / M\u00c1QUINA / D\u00cdA' },
+            result: { auditTrail: 'TRAZA DE AUDITOR\u00cdA' },
+        },
+    };
+
+    Object.keys(monitorTranslations).forEach((locale) => {
+        const source = monitorTranslations[locale];
+        Object.keys(source).forEach((section) => {
+            Object.assign(translations[locale][section], source[section]);
+        });
+    });
+
     const localeTags = { en: 'en', zh: 'zh-CN', ja: 'ja', ko: 'ko', es: 'es' };
     const getValue = (locale, key) => key.split('.').reduce((value, part) => value && value[part], translations[locale]);
     const format = (value) => String(value).replace(/\{(miner|quantity)\}/g, (_, token) => {

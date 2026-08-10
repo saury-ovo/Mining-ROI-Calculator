@@ -6,7 +6,7 @@
     <title data-i18n="common.browserTitle">Mining Machine ROI Calculator</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='style.css') }}?v=ui-20260806-4" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}?v=terminal-preview-1" rel="stylesheet">
 </head>
 <body class="app-shell" data-page="index">
     <nav class="topbar">
@@ -14,20 +14,23 @@
             <span class="brand-mark"><i class="bi bi-cpu-fill"></i></span>
             <span>MINING<span class="brand-accent">OPS</span></span>
         </a>
+        <div class="topbar-center">
+            <span class="terminal-label" data-i18n="common.roiTerminal">ROI TERMINAL</span>
+            <span class="topbar-divider"></span>
+            <span data-i18n="common.analyticsWorkspace">ANALYTICS WORKSPACE</span>
+        </div>
         <div class="topbar-meta">
             <span class="live-dot"></span>
-            <span data-i18n="common.analyticsWorkspace">ANALYTICS WORKSPACE</span>
-            <span class="topbar-divider"></span>
-            <span class="text-muted small" data-i18n="common.modelInput">USD / 24H MODEL</span>
+            <span data-i18n="common.modelInput">USD / 24H MODEL</span>
             <div class="language-control">
                 <label for="languageSelect" data-i18n="common.language">Language</label>
                 <div class="language-select-wrap">
                     <select id="languageSelect" aria-label="Language">
                         <option value="en">English</option>
-                        <option value="zh">中文</option>
-                        <option value="ja">日本語</option>
-                        <option value="ko">한국어</option>
-                        <option value="es">Español</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="es">Spanish</option>
                     </select>
                     <i class="bi bi-chevron-down"></i>
                 </div>
@@ -35,16 +38,17 @@
         </div>
     </nav>
 
-    <main class="container-fluid page-wrap">
-        <section class="page-intro row align-items-end g-4">
-            <div class="col-lg-8">
+    <main class="container-fluid page-wrap terminal-page">
+        <section class="terminal-intro">
+            <div>
                 <p class="eyebrow"><span data-i18n="index.pageKicker">CAPITAL ALLOCATION TOOL</span> <span>/</span> 01</p>
                 <h1><span data-i18n="index.titleLead">Mining Machine</span> <span data-i18n="index.titleTail">ROI Calculator</span></h1>
                 <p class="intro-copy" data-i18n="index.introCopy">Build a clean operating model for your next mining deployment.</p>
             </div>
-            <div class="col-lg-4 intro-note">
-                <div class="note-line"><i class="bi bi-shield-check"></i><span data-i18n="index.noteEnergy">Model uses 24-hour energy and revenue assumptions</span></div>
-                <div class="note-line"><i class="bi bi-arrow-repeat"></i><span data-i18n="index.noteRefresh">Results refresh instantly from your inputs</span></div>
+            <div class="intro-telemetry" aria-label="Model status">
+                <div><span data-i18n="index.telemetryModel">MODEL</span><strong data-i18n="common.modelLive">LIVE</strong></div>
+                <div><span data-i18n="index.telemetryWindow">WINDOW</span><strong data-i18n="common.window24h">24H</strong></div>
+                <div><span data-i18n="index.telemetryStore">STORE</span><strong data-i18n="common.storageLocal">LOCAL</strong></div>
             </div>
         </section>
 
@@ -52,117 +56,124 @@
         <div class="alert alert-danger app-alert" role="alert"><i class="bi bi-exclamation-triangle me-2"></i>{{ error }}</div>
         {% endif %}
 
-        <form method="post" class="row g-4" autocomplete="off" novalidate>
-            <div class="col-xl-7">
-                <section class="form-panel h-100">
-                    <div class="panel-heading">
+        <form method="post" class="roi-form" autocomplete="off" novalidate>
+            <div class="terminal-layout">
+                <div class="workspace-column">
+                    <section class="workspace-panel">
+                    <div class="panel-heading workspace-heading">
                         <div>
-                            <p class="eyebrow mb-2" data-i18n="index.assetProfile">ASSET PROFILE</p>
+                            <p class="eyebrow" data-i18n="index.assetProfile">MACHINE PROFILE</p>
                             <h2 data-i18n="index.machineConfiguration">Machine configuration</h2>
                         </div>
-                        <span class="panel-index">01</span>
+                        <div class="panel-code" data-i18n="common.panelInput">INPUT / 01</div>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-6 field-group">
-                            <label for="miner_name" data-i18n="fields.minerName">Miner Name</label>
-                            <input id="miner_name" name="miner_name" type="text" class="form-control" data-i18n-placeholder="placeholders.minerName" placeholder="Enter miner model" value="{{ form_data.get('miner_name', '') }}" required>
-                        </div>
-                        <div class="col-md-3 field-group">
-                            <label for="quantity" data-i18n="fields.quantity">Quantity</label>
-                            <input id="quantity" name="quantity" type="number" inputmode="numeric" class="form-control" data-number-mode="integer" min="1" step="1" data-i18n-placeholder="placeholders.quantity" placeholder="Enter quantity" value="{{ form_data.get('quantity', '') }}" required>
-                        </div>
-                        <div class="col-md-3 field-group">
-                            <label for="coin" data-i18n="fields.coin">Coin</label>
-                            <div class="coin-dropdown" data-coin-dropdown>
-                                <button id="coinDropdownButton" type="button" class="coin-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="coinDropdownMenu">
-                                    <span class="coin-dropdown-value" id="coinDropdownValue"><span class="coin-empty-label" data-i18n="coin.selectPrompt">Select coin</span></span>
-                                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
-                                </button>
-                                <div id="coinDropdownMenu" class="coin-dropdown-menu" role="listbox" aria-labelledby="coinDropdownButton" hidden></div>
-                                <input id="coin" name="coin" type="hidden" data-selected-coin="{{ form_data.get('coin', '') }}" value="{{ form_data.get('coin', '') }}">
+
+                    <div class="input-section">
+                        <div class="section-label"><span data-i18n="index.identity">IDENTITY</span><span class="section-rule"></span><span class="section-context">01</span></div>
+                        <div class="field-grid identity-grid">
+                            <div class="field-group field-wide">
+                                <label for="miner_name" data-i18n="fields.minerName">Miner Name</label>
+                                <input id="miner_name" name="miner_name" type="text" class="form-control" data-i18n-placeholder="placeholders.minerName" placeholder="Enter miner model" value="{{ form_data.get('miner_name', '') }}" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="quantity" data-i18n="fields.quantity">Quantity</label>
+                                <input id="quantity" name="quantity" type="number" inputmode="numeric" class="form-control" data-number-mode="integer" min="1" step="1" data-i18n-placeholder="placeholders.quantity" placeholder="Enter quantity" value="{{ form_data.get('quantity', '') }}" required>
+                            </div>
+                            <div class="field-group">
+                                <label for="coin" data-i18n="fields.coin">Coin</label>
+                                <div class="coin-dropdown" data-coin-dropdown>
+                                    <button id="coinDropdownButton" type="button" class="coin-dropdown-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="coinDropdownMenu">
+                                        <span class="coin-dropdown-value" id="coinDropdownValue"><span class="coin-empty-label" data-i18n="coin.selectPrompt">Select coin</span></span>
+                                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                                    </button>
+                                    <div id="coinDropdownMenu" class="coin-dropdown-menu" role="listbox" aria-labelledby="coinDropdownButton" hidden></div>
+                                    <input id="coin" name="coin" type="hidden" data-selected-coin="{{ form_data.get('coin', '') }}" value="{{ form_data.get('coin', '') }}">
+                                </div>
+                            </div>
+                            <div class="field-group field-wide">
+                                <label for="algorithm" data-i18n="fields.algorithm">Algorithm</label>
+                                <input id="algorithm" name="algorithm" type="text" class="form-control readonly-control" data-i18n-placeholder="placeholders.algorithmAuto" placeholder="Auto selected from coin" value="{{ form_data.get('algorithm', '') }}" readonly aria-readonly="true">
                             </div>
                         </div>
-                        <div class="col-md-4 field-group">
-                            <label for="algorithm" data-i18n="fields.algorithm">Algorithm</label>
-                            <input id="algorithm" name="algorithm" type="text" class="form-control readonly-control" data-i18n-placeholder="placeholders.algorithmAuto" placeholder="Auto selected from coin" value="{{ form_data.get('algorithm', '') }}" readonly aria-readonly="true">
-                        </div>
-                        <div class="col-md-4 field-group">
-                            <label for="hashrate" data-i18n="fields.hashrate">Hashrate</label>
-                            <div class="input-with-select"><input id="hashrate" name="hashrate" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="any" data-i18n-placeholder="placeholders.hashrate" placeholder="Enter hashrate" value="{{ form_data.get('hashrate', '') }}"><div class="unit-select-wrap"><select id="hashrate_unit" name="hashrate_unit" class="unit-select" data-selected-unit="{{ form_data.get('hashrate_unit', '') }}" data-i18n-aria="fields.hashrateUnit" aria-label="Hashrate unit"></select><i class="bi bi-chevron-down"></i></div></div>
-                        </div>
-                        <div class="col-md-4 field-group">
-                            <label for="network_hashrate" data-i18n="fields.networkHashrate">Network Hashrate</label>
-                            <div class="input-with-select"><input id="network_hashrate" name="network_hashrate" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="any" data-i18n-placeholder="placeholders.networkHashrate" placeholder="Enter network hashrate" value="{{ form_data.get('network_hashrate', '') }}"><div class="unit-select-wrap"><select id="network_hashrate_unit" name="network_hashrate_unit" class="unit-select" data-selected-unit="{{ form_data.get('network_hashrate_unit', '') }}" data-i18n-aria="fields.networkHashrateUnit" aria-label="Network hashrate unit"></select><i class="bi bi-chevron-down"></i></div></div>
+                    </div>
+
+                    <div class="input-section">
+                        <div class="section-label"><span data-i18n="index.computeProfile">COMPUTE PROFILE</span><span class="section-rule"></span><span class="section-context">02</span></div>
+                        <div class="field-grid compute-grid">
+                            <div class="field-group">
+                                <label for="hashrate" data-i18n="fields.hashrate">Hashrate</label>
+                                <div class="input-with-select"><input id="hashrate" name="hashrate" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="any" data-i18n-placeholder="placeholders.hashrate" placeholder="Enter hashrate" value="{{ form_data.get('hashrate', '') }}"><div class="unit-select-wrap"><select id="hashrate_unit" name="hashrate_unit" class="unit-select" data-selected-unit="{{ form_data.get('hashrate_unit', '') }}" data-i18n-aria="fields.hashrateUnit" aria-label="Hashrate unit"></select><i class="bi bi-chevron-down"></i></div></div>
+                            </div>
+                            <div class="field-group">
+                                <label for="network_hashrate" data-i18n="fields.networkHashrate">Network Hashrate</label>
+                                <div class="input-with-select"><input id="network_hashrate" name="network_hashrate" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="any" data-i18n-placeholder="placeholders.networkHashrate" placeholder="Enter network hashrate" value="{{ form_data.get('network_hashrate', '') }}"><div class="unit-select-wrap"><select id="network_hashrate_unit" name="network_hashrate_unit" class="unit-select" data-selected-unit="{{ form_data.get('network_hashrate_unit', '') }}" data-i18n-aria="fields.networkHashrateUnit" aria-label="Network hashrate unit"></select><i class="bi bi-chevron-down"></i></div></div>
+                            </div>
                         </div>
                     </div>
-                </section>
-            </div>
 
-            <div class="col-xl-5">
-                <section class="form-panel h-100">
-                    <div class="panel-heading">
+                    <div class="input-section last-input-section">
+                        <div class="section-label"><span data-i18n="index.operatingAssumptions">OPERATING ASSUMPTIONS</span><span class="section-rule"></span><span class="section-context">03</span></div>
+                        <div class="field-grid operating-grid">
+                            <div class="field-group">
+                                <label for="machine_price" data-i18n="fields.machinePrice">Machine Price</label>
+                                <div class="input-with-unit"><span class="prefix">$</span><input id="machine_price" name="machine_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.machinePrice" placeholder="Enter machine price" value="{{ form_data.get('machine_price', '') }}" required><span data-i18n="units.usd">USD</span></div>
+                            </div>
+                            <div class="field-group">
+                                <label for="other_cost"><span data-i18n="fields.otherCost">Other Cost</span> <small data-i18n="common.optional">OPTIONAL</small></label>
+                                <div class="input-with-unit"><span class="prefix">$</span><input id="other_cost" name="other_cost" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.zero" placeholder="0" value="{{ form_data.get('other_cost', '0') }}"><span data-i18n="units.usd">USD</span></div>
+                            </div>
+                            <div class="field-group">
+                                <label for="power_consumption" data-i18n="fields.powerConsumption">Power Consumption</label>
+                                <div class="input-with-unit"><input id="power_consumption" name="power_consumption" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.powerConsumption" placeholder="Enter power" value="{{ form_data.get('power_consumption', '') }}" required><span data-i18n="units.watt">W</span></div>
+                            </div>
+                            <div class="field-group">
+                                <label for="electricity_price" data-i18n="fields.electricityPrice">Electricity Price</label>
+                                <div class="input-with-unit"><span class="prefix">$</span><input id="electricity_price" name="electricity_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.001" data-i18n-placeholder="placeholders.electricityPrice" placeholder="Enter electricity price" value="{{ form_data.get('electricity_price', '') }}" required><span data-i18n="units.kwh">/kWh</span></div>
+                            </div>
+                            <div class="field-group">
+                                <label for="pool_fee"><span data-i18n="fields.poolFee">Pool Fee</span> <small data-i18n="common.optional">OPTIONAL</small></label>
+                                <div class="input-with-unit"><input id="pool_fee" name="pool_fee" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" data-max="100" min="0" max="100" step="0.01" data-i18n-placeholder="placeholders.zero" placeholder="0" value="{{ form_data.get('pool_fee', '0') }}"><span data-i18n="units.percent">%</span></div>
+                            </div>
+                            <div class="field-group field-wide">
+                                <label for="network_daily_coin_production" data-i18n="fields.networkDailyCoinProduction">Network Daily Coin Production</label>
+                                <div class="input-with-unit"><input id="network_daily_coin_production" name="network_daily_coin_production" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="0.00000001" data-i18n-placeholder="placeholders.networkDailyCoinProduction" placeholder="Enter network daily production" value="{{ form_data.get('network_daily_coin_production', '') }}" required><span data-i18n="units.coinDay">COIN / DAY</span></div>
+                            </div>
+                            <div class="field-group field-wide">
+                                <label for="coin_price" data-i18n="fields.coinPrice">Coin Price</label>
+                                <div class="input-with-unit"><span class="prefix">$</span><input id="coin_price" name="coin_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.coinPrice" placeholder="Enter coin price" value="{{ form_data.get('coin_price', '') }}" required><span data-i18n="units.usd">USD</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    </section>
+
+                    <div class="workspace-footer">
+                        <span><i class="bi bi-shield-check"></i> <span data-i18n="index.noteEnergy">Model uses 24-hour energy and revenue assumptions</span></span>
+                        <span><i class="bi bi-arrow-repeat"></i> <span data-i18n="index.noteRefresh">Results refresh instantly from your inputs</span></span>
+                    </div>
+                </div>
+
+            <aside class="summary-column">
+                <section class="summary-panel">
+                    <div class="summary-header">
                         <div>
-                            <p class="eyebrow mb-2" data-i18n="index.capitalStack">CAPITAL STACK</p>
-                            <h2 data-i18n="index.acquisitionCost">Acquisition cost</h2>
+                            <p class="eyebrow" data-i18n="index.monitorTitle">OPERATING MONITOR</p>
+                            <h2 data-i18n="index.monitorSubtitle">Secondary operating signals</h2>
                         </div>
-                        <span class="panel-index">02</span>
+                        <span class="panel-code" data-i18n="common.panelLive">LIVE / 01</span>
                     </div>
-                    <div class="row g-3">
-                        <div class="col-md-6 field-group">
-                            <label for="machine_price" data-i18n="fields.machinePrice">Machine Price</label>
-                            <div class="input-with-unit"><span class="prefix">$</span><input id="machine_price" name="machine_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.machinePrice" placeholder="Enter machine price" value="{{ form_data.get('machine_price', '') }}" required><span data-i18n="units.usd">USD</span></div>
-                        </div>
-                        <div class="col-md-6 field-group">
-                            <label for="other_cost"><span data-i18n="fields.otherCost">Other Cost</span> <small data-i18n="common.optional">OPTIONAL</small></label>
-                            <div class="input-with-unit"><span class="prefix">$</span><input id="other_cost" name="other_cost" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.zero" placeholder="0" value="{{ form_data.get('other_cost', '0') }}"><span data-i18n="units.usd">USD</span></div>
-                        </div>
+                    <div class="monitor-status">
+                        <span data-i18n="index.monitorInputStatus">INPUT READINESS</span>
+                        <strong id="live-input-readiness">0 / 10</strong>
                     </div>
-                    <div class="capital-caption"><i class="bi bi-info-circle"></i> <span data-i18n="index.capitalCaption">Include shipping, setup, hosting, or other one-time expenses.</span></div>
+                    <div class="monitor-list">
+                        <div class="monitor-row"><span data-i18n="index.totalPowerLoad">Total Power Load</span><strong id="live-total-power">--</strong><small data-i18n="units.kilowatt">kW</small></div>
+                        <div class="monitor-row"><span data-i18n="index.perMachinePowerCost">Per-Machine Daily Power Cost</span><strong id="live-machine-power-cost">--</strong><small data-i18n="units.usdMachineDay">USD / MACHINE / DAY</small></div>
+                        <div class="monitor-row monitor-asset"><span data-i18n="index.selectedAsset">Selected Asset</span><strong id="live-selected-coin">--</strong><small id="live-selected-algorithm">--</small></div>
+                    </div>
+                    <div class="summary-caption"><i class="bi bi-activity"></i><span data-i18n="index.monitorDescription">Secondary signals update from your current inputs. Core ROI results appear after submission.</span></div>
+                    <button type="submit" class="calculate-btn"><span data-i18n="common.calculateROI">Calculate ROI</span><i class="bi bi-arrow-up-right"></i></button>
                 </section>
-            </div>
-
-            <div class="col-xl-7">
-                <section class="form-panel h-100">
-                    <div class="panel-heading">
-                        <div>
-                            <p class="eyebrow mb-2" data-i18n="index.operatingProfile">OPERATING PROFILE</p>
-                            <h2 data-i18n="index.powerMarket">Power and market assumptions</h2>
-                        </div>
-                        <span class="panel-index">03</span>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-4 field-group">
-                            <label for="power_consumption" data-i18n="fields.powerConsumption">Power Consumption</label>
-                            <div class="input-with-unit"><input id="power_consumption" name="power_consumption" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.powerConsumption" placeholder="Enter power" value="{{ form_data.get('power_consumption', '') }}" required><span data-i18n="units.watt">W</span></div>
-                        </div>
-                        <div class="col-md-4 field-group">
-                            <label for="electricity_price" data-i18n="fields.electricityPrice">Electricity Price</label>
-                            <div class="input-with-unit"><span class="prefix">$</span><input id="electricity_price" name="electricity_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.001" data-i18n-placeholder="placeholders.electricityPrice" placeholder="Enter electricity price" value="{{ form_data.get('electricity_price', '') }}" required><span data-i18n="units.kwh">/kWh</span></div>
-                        </div>
-                        <div class="col-md-4 field-group">
-                            <label for="pool_fee"><span data-i18n="fields.poolFee">Pool Fee</span> <small data-i18n="common.optional">OPTIONAL</small></label>
-                            <div class="input-with-unit"><input id="pool_fee" name="pool_fee" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" data-max="100" min="0" max="100" step="0.01" data-i18n-placeholder="placeholders.zero" placeholder="0" value="{{ form_data.get('pool_fee', '0') }}"><span data-i18n="units.percent">%</span></div>
-                        </div>
-                        <div class="col-md-6 field-group">
-                            <label for="network_daily_coin_production" data-i18n="fields.networkDailyCoinProduction">Network Daily Coin Production</label>
-                            <div class="input-with-unit"><input id="network_daily_coin_production" name="network_daily_coin_production" type="text" inputmode="decimal" class="form-control" data-number-mode="decimal" min="0" step="0.00000001" data-i18n-placeholder="placeholders.networkDailyCoinProduction" placeholder="Enter network daily production" value="{{ form_data.get('network_daily_coin_production', '') }}" required><span data-i18n="units.coinDay">COIN / DAY</span></div>
-                        </div>
-                        <div class="col-md-6 field-group">
-                            <label for="coin_price" data-i18n="fields.coinPrice">Coin Price</label>
-                            <div class="input-with-unit"><span class="prefix">$</span><input id="coin_price" name="coin_price" type="text" inputmode="decimal" class="form-control has-prefix" data-number-mode="decimal" min="0" step="0.01" data-i18n-placeholder="placeholders.coinPrice" placeholder="Enter coin price" value="{{ form_data.get('coin_price', '') }}" required><span data-i18n="units.usd">USD</span></div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <div class="col-xl-5">
-                <section class="action-panel h-100">
-                    <div class="action-kicker"><i class="bi bi-bar-chart-line-fill"></i> <span data-i18n="index.readyForAnalysis">READY FOR ANALYSIS</span></div>
-                    <h2 data-i18n="index.actionTitle">Turn assumptions into an investment view.</h2>
-                    <p data-i18n="index.actionDescription">Review operating margin, capital recovery, and annualized return in one dashboard.</p>
-                    <button type="submit" class="btn btn-primary calculate-btn"><span data-i18n="common.calculateROI">Calculate ROI</span><i class="bi bi-arrow-up-right"></i></button>
-                    <div class="action-foot"><i class="bi bi-lock"></i> <span data-i18n="index.localNotice">No data is stored. This model runs locally.</span></div>
-                </section>
+            </aside>
             </div>
         </form>
     </main>
