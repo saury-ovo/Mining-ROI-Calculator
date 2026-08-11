@@ -3,8 +3,8 @@
     const translations = {
         en: {
             common: {
-                browserTitle: 'Mining Machine ROI Calculator',
-                resultBrowserTitle: 'ROI Analysis | {miner}',
+                browserTitle: 'ASIC ROI Analyzer',
+                resultBrowserTitle: 'ASIC ROI Analyzer | {miner}',
                 analyticsWorkspace: 'ANALYTICS WORKSPACE',
                 modelInput: 'USD / 24H MODEL',
                 modelComplete: 'MODEL COMPLETE',
@@ -115,8 +115,8 @@
         },
         zh: {
             common: {
-                browserTitle: '矿机投资收益分析器',
-                resultBrowserTitle: '收益分析 | {miner}',
+                browserTitle: 'ASIC ROI Analyzer',
+                resultBrowserTitle: 'ASIC ROI Analyzer | {miner}',
                 analyticsWorkspace: '分析工作区',
                 modelInput: '美元 / 24小时模型',
                 modelComplete: '模型完成',
@@ -176,7 +176,7 @@
         },
         ja: {
             common: {
-                browserTitle: 'マイニングROI計算ツール', resultBrowserTitle: 'ROI分析 | {miner}', analyticsWorkspace: '分析ワークスペース',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '分析ワークスペース',
                 modelInput: 'USD / 24時間モデル', modelComplete: 'モデル完了', language: '言語', optional: '任意',
                 calculateROI: 'ROIを計算', editAssumptions: '前提を編集', na: '該当なし'
             },
@@ -216,7 +216,7 @@
         },
         ko: {
             common: {
-                browserTitle: '채굴 ROI 계산기', resultBrowserTitle: 'ROI 분석 | {miner}', analyticsWorkspace: '분석 작업 공간', modelInput: 'USD / 24시간 모델',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '분석 작업 공간', modelInput: 'USD / 24시간 모델',
                 modelComplete: '모델 완료', language: '언어', optional: '선택 사항', calculateROI: 'ROI 계산', editAssumptions: '가정 편집', na: '해당 없음'
             },
             index: {
@@ -250,7 +250,7 @@
         },
         es: {
             common: {
-                browserTitle: 'Calculadora ROI de Minería', resultBrowserTitle: 'Análisis ROI | {miner}', analyticsWorkspace: 'ESPACIO DE ANÁLISIS', modelInput: 'USD / MODELO 24H',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: 'ESPACIO DE ANÁLISIS', modelInput: 'USD / MODELO 24H',
                 modelComplete: 'MODELO COMPLETO', language: 'Idioma', optional: 'OPCIONAL', calculateROI: 'Calcular ROI', editAssumptions: 'Editar supuestos', na: 'N/D'
             },
             index: {
@@ -314,6 +314,42 @@
     translations.es.result.networkDailyProduction = 'Producci\u00f3n diaria de la red';
     translations.es.result.miningShare = 'Participaci\u00f3n minera';
     translations.es.result.estimatedDailyCoin = 'Monedas diarias estimadas';
+
+    translations.en.index.marketLoading = 'Loading market data...';
+    translations.en.index.marketUpdated = 'Market data updated. Manual inputs remain in control.';
+    translations.en.index.marketPartial = 'Some market data is unavailable. Enter missing values manually.';
+    translations.en.index.marketManual = 'Market data unavailable. Please enter values manually.';
+    translations.en.index.marketSource = 'Source';
+    translations.en.index.marketFetchedAt = 'Fetched';
+    translations.en.index.marketObservedAt = 'Observed';
+    translations.zh.index.marketLoading = '\u6b63\u5728\u52a0\u8f7d\u5e02\u573a\u6570\u636e...';
+    translations.zh.index.marketUpdated = '\u5e02\u573a\u6570\u636e\u5df2\u66f4\u65b0\u3002\u624b\u52a8\u8f93\u5165\u4f18\u5148\u3002';
+    translations.zh.index.marketPartial = '\u90e8\u5206\u5e02\u573a\u6570\u636e\u4e0d\u53ef\u7528\uff0c\u8bf7\u624b\u52a8\u8865\u5145\u7f3a\u5931\u503c\u3002';
+    translations.zh.index.marketManual = '\u5e02\u573a\u6570\u636e\u4e0d\u53ef\u7528\uff0c\u8bf7\u624b\u52a8\u8f93\u5165\u3002';
+    translations.zh.index.marketSource = '\u6570\u636e\u6765\u6e90';
+    translations.zh.index.marketFetchedAt = '\u83b7\u53d6\u65f6\u95f4';
+    translations.zh.index.marketObservedAt = '\u6570\u636e\u89c2\u6d4b\u65f6\u95f4';
+    translations.ja.index.marketLoading = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u8aad\u307f\u8fbc\u3093\u3067\u3044\u307e\u3059...';
+    translations.ja.index.marketUpdated = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u66f4\u65b0\u3057\u307e\u3057\u305f\u3002\u624b\u52d5\u5165\u529b\u304c\u512a\u5148\u3055\u308c\u307e\u3059\u3002';
+    translations.ja.index.marketPartial = '\u4e00\u90e8\u306e\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093\u3002\u4e0d\u8db3\u5024\u3092\u624b\u52d5\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+    translations.ja.index.marketManual = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3067\u304d\u307e\u305b\u3093\u3002\u5024\u3092\u624b\u52d5\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+    translations.ja.index.marketSource = '\u30bd\u30fc\u30b9';
+    translations.ja.index.marketFetchedAt = '\u53d6\u5f97\u6642\u523b';
+    translations.ja.index.marketObservedAt = '\u89b3\u6e2c\u6642\u523b';
+    translations.ko.index.marketLoading = '\uc2dc\uc7a5 \ub370\uc774\ud130 \ubd88\ub7ec\uc624\ub294 \uc911...';
+    translations.ko.index.marketUpdated = '\uc2dc\uc7a5 \ub370\uc774\ud130\uac00 \uc5c5\ub370\uc774\ud2b8\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uc218\ub3d9 \uc785\ub825\uc774 \uc6b0\uc120\ub429\ub2c8\ub2e4.';
+    translations.ko.index.marketPartial = '\uc77c\ubd80 \uc2dc\uc7a5 \ub370\uc774\ud130\ub97c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \ub204\ub77d\ub41c \uac12\uc744 \uc218\ub3d9\uc73c\ub85c \uc785\ub825\ud558\uc138\uc694.';
+    translations.ko.index.marketManual = '\uc2dc\uc7a5 \ub370\uc774\ud130\ub97c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \uac12\uc744 \uc218\ub3d9\uc73c\ub85c \uc785\ub825\ud558\uc138\uc694.';
+    translations.ko.index.marketSource = '\ucd9c\ucc98';
+    translations.ko.index.marketFetchedAt = '\uc870\ud68c \uc2dc\uac01';
+    translations.ko.index.marketObservedAt = '\uad00\uce21 \uc2dc\uac01';
+    translations.es.index.marketLoading = 'Cargando datos de mercado...';
+    translations.es.index.marketUpdated = 'Datos de mercado actualizados. Las entradas manuales tienen prioridad.';
+    translations.es.index.marketPartial = 'Algunos datos de mercado no están disponibles. Introduce los valores faltantes manualmente.';
+    translations.es.index.marketManual = 'Datos de mercado no disponibles. Introduce los valores manualmente.';
+    translations.es.index.marketSource = 'Fuente';
+    translations.es.index.marketFetchedAt = 'Obtenido';
+    translations.es.index.marketObservedAt = 'Observado';
 
     const monitorTranslations = {
         en: {

@@ -1,8 +1,9 @@
 import logging
 
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 
 from calculator import CalculatorError, calculate_roi
+from market_data.service import get_market_data
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -22,6 +23,12 @@ def index():
             return render_template("index.html", error=str(error), form_data=form_data), 400
 
     return render_template("index.html", form_data=form_data)
+
+
+@app.get("/api/market-data")
+def market_data():
+    """Return optional market fields without coupling them to ROI calculation."""
+    return jsonify(get_market_data(request.args.get("coin", "")))
 
 
 if __name__ == "__main__":
