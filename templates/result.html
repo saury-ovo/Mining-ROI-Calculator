@@ -3,101 +3,96 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title data-i18n="common.resultBrowserTitle">ROI Analysis | {{ data.get('miner_name', 'Mining Machine') }}</title>
+    <title data-i18n="common.resultBrowserTitle">ASIC ROI Analyzer | {{ data.get('miner_name', 'Mining Machine') }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='style.css') }}?v=ui-20260806-4" rel="stylesheet">
+    <link href="{{ url_for('static', filename='style.css') }}?v=terminal-preview-4" rel="stylesheet">
 </head>
 <body class="app-shell" data-page="result" data-miner-name="{{ data.get('miner_name', '') }}" data-quantity="{{ data.get('quantity', '') }}">
     <nav class="topbar">
         <a class="brand" href="{{ url_for('index') }}">
-            <span class="brand-mark"><i class="bi bi-cpu-fill"></i></span>
-            <span>MINING<span class="brand-accent">OPS</span></span>
+            <span class="brand-mark"><img src="{{ url_for('static', filename='images/asic-roi-analyzer.svg') }}" alt="ASIC ROI Analyzer"></span>
+            <span class="brand-name"><span>ASIC ROI</span><span class="brand-accent">ANALYZER</span></span>
         </a>
-        <div class="topbar-meta">
-            <span class="live-dot"></span>
-            <span data-i18n="common.analyticsWorkspace">ANALYTICS WORKSPACE</span>
+        <div class="topbar-center">
+            <span class="terminal-label" data-i18n="common.roiTerminal">ROI TERMINAL</span>
             <span class="topbar-divider"></span>
-            <span class="text-muted small" data-i18n="common.modelComplete">MODEL COMPLETE</span>
-            <div class="language-control">
+            <span data-i18n="common.analyticsWorkspace">ANALYTICS WORKSPACE</span>
+        </div>
+        <div class="language-control">
                 <label for="languageSelect" data-i18n="common.language">Language</label>
                 <div class="language-select-wrap">
                     <select id="languageSelect" aria-label="Language">
                         <option value="en">English</option>
-                        <option value="zh">中文</option>
-                        <option value="ja">日本語</option>
-                        <option value="ko">한국어</option>
-                        <option value="es">Español</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                        <option value="es">Spanish</option>
                     </select>
                     <i class="bi bi-chevron-down"></i>
                 </div>
-            </div>
         </div>
     </nav>
 
     <main class="container-fluid page-wrap result-wrap">
-        <section class="result-heading row align-items-end g-4">
-            <div class="col-lg-8">
+        <section class="result-hero">
+            <div>
                 <p class="eyebrow"><span data-i18n="result.pageKicker">INVESTMENT ANALYSIS</span> <span>/</span> 02</p>
-                <div class="title-row"><h1>{{ data.get('miner_name') }}</h1><span class="status-chip {% if results['profit_status'] == 'PROFITABLE' %}is-profitable{% else %}is-loss{% endif %}"><span class="status-dot"></span><span data-i18n="{% if results['profit_status'] == 'PROFITABLE' %}result.statusProfitable{% else %}result.statusLoss{% endif %}">{{ results['profit_status'] }}</span></span></div>
+                <div class="title-row">
+                    <h1>{{ data.get('miner_name') }}</h1>
+                    <span class="status-chip {% if results['profit_status'] == 'PROFITABLE' %}is-profitable{% else %}is-loss{% endif %}"><span class="status-dot"></span><span data-i18n="{% if results['profit_status'] == 'PROFITABLE' %}result.statusProfitable{% else %}result.statusLoss{% endif %}">{{ results['profit_status'] }}</span></span>
+                </div>
                 <p class="intro-copy" data-i18n="result.introCopy">A performance snapshot for your {{ data.get('quantity') }}-unit deployment.</p>
             </div>
-            <div class="col-lg-4 text-lg-end">
-                <a href="{{ url_for('index') }}" class="btn btn-outline-light edit-btn"><i class="bi bi-sliders2"></i> <span data-i18n="common.editAssumptions">Edit assumptions</span></a>
-            </div>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-light edit-btn"><i class="bi bi-sliders2"></i> <span data-i18n="common.editAssumptions">Edit assumptions</span></a>
         </section>
 
         {% if results['unrealistic_input'] %}
-        <div class="alert realistic-warning" role="alert">
-            <i class="bi bi-exclamation-triangle"></i>
-            <span data-i18n="result.unrealisticWarning">Input data may be unrealistic</span>
-        </div>
+        <div class="alert realistic-warning" role="alert"><i class="bi bi-exclamation-triangle"></i><span data-i18n="result.unrealisticWarning">Input data may be unrealistic</span></div>
         {% endif %}
-        <section class="asset-strip row g-0">
-            <div class="col-6 col-md"><span data-i18n="fields.algorithm">ALGORITHM</span><strong>{{ results['algorithm'] }}</strong></div>
-            <div class="col-6 col-md"><span data-i18n="fields.coin">COIN</span><strong>{{ results['coin'] }}</strong></div>
-            <div class="col-6 col-md"><span data-i18n="fields.hashrate">HASHRATE</span><strong>{% if results['hashrate_value'] is not none %}{{ '%.6g'|format(results['hashrate_value']) }} {{ results['hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
-            <div class="col-6 col-md"><span data-i18n="fields.networkHashrate">NETWORK HASHRATE</span><strong>{% if results['network_hashrate_value'] is not none %}{{ '%.6g'|format(results['network_hashrate_value']) }} {{ results['network_hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
-            <div class="col-6 col-md"><span data-i18n="fields.quantity">QUANTITY</span><strong>{{ data.get('quantity') }}</strong></div>
-            <div class="col-12 col-md"><span data-i18n="fields.poolFee">POOL FEE</span><strong>{{ '%.2f'|format(results['pool_fee_percent']) }}%</strong></div>
+
+        <section class="asset-strip">
+            <div><span data-i18n="fields.coin">COIN</span><strong>{{ results['coin'] }}</strong></div>
+            <div><span data-i18n="fields.algorithm">ALGORITHM</span><strong>{{ results['algorithm'] }}</strong></div>
+            <div><span data-i18n="fields.hashrate">HASHRATE</span><strong>{% if results['hashrate_value'] is not none %}{{ '%.6g'|format(results['hashrate_value']) }} {{ results['hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
+            <div><span data-i18n="fields.networkHashrate">NETWORK HASHRATE</span><strong>{% if results['network_hashrate_value'] is not none %}{{ '%.6g'|format(results['network_hashrate_value']) }} {{ results['network_hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
+            <div><span data-i18n="fields.quantity">QUANTITY</span><strong>{{ data.get('quantity') }}</strong></div>
+            <div><span data-i18n="fields.poolFee">POOL FEE</span><strong>{{ '%.2f'|format(results['pool_fee_percent']) }}%</strong></div>
         </section>
 
         <section class="metrics-section">
             <div class="section-label"><span data-i18n="result.coreMetrics">CORE METRICS</span><span class="section-rule"></span><span class="section-context" data-i18n="units.usdDay">USD / DAY</span></div>
-            <div class="row g-3">
-                <div class="col-sm-6 col-xl-3"><article class="metric-card accent-neutral"><div class="metric-top"><span data-i18n="result.initialInvestment">INITIAL INVESTMENT</span><i class="bi bi-wallet2"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['total_investment']) }}</div><div class="metric-meta" data-i18n="result.capitalDeployed">CAPITAL DEPLOYED</div></article></div>
-                <div class="col-sm-6 col-xl-3"><article class="metric-card accent-blue"><div class="metric-top"><span data-i18n="result.dailyRevenue">DAILY REVENUE</span><i class="bi bi-arrow-down-left"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_revenue']) }}</div><div class="metric-meta" data-i18n="result.grossMiningOutput">GROSS MINING OUTPUT</div></article></div>
-                <div class="col-sm-6 col-xl-3"><article class="metric-card accent-orange"><div class="metric-top"><span data-i18n="result.electricityCost">ELECTRICITY COST</span><i class="bi bi-lightning-charge-fill"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_electricity_cost']) }}</div><div class="metric-meta">{{ '%.2f'|format(results['daily_energy']) }} <span data-i18n="units.kwhDay">kWh / DAY</span></div></article></div>
-                <div class="col-sm-6 col-xl-3"><article class="metric-card {% if results['daily_profit'] > 0 %}accent-green{% else %}accent-red{% endif %}"><div class="metric-top"><span data-i18n="result.dailyProfit">DAILY PROFIT</span><i class="bi bi-graph-up-arrow"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_profit']) }}</div><div class="metric-meta" data-i18n="result.netAfterPool">NET AFTER POOL FEE</div></article></div>
+            <div class="kpi-grid">
+                <article class="metric-card accent-neutral"><div class="metric-top"><span data-i18n="result.initialInvestment">INITIAL INVESTMENT</span><i class="bi bi-wallet2"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['total_investment']) }}</div><div class="metric-meta" data-i18n="result.capitalDeployed">CAPITAL DEPLOYED</div></article>
+                <article class="metric-card accent-blue"><div class="metric-top"><span data-i18n="result.dailyRevenue">DAILY REVENUE</span><i class="bi bi-arrow-down-left"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_revenue']) }}</div><div class="metric-meta" data-i18n="result.grossMiningOutput">GROSS MINING OUTPUT</div></article>
+                <article class="metric-card accent-orange"><div class="metric-top"><span data-i18n="result.electricityCost">ELECTRICITY COST</span><i class="bi bi-lightning-charge-fill"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_electricity_cost']) }}</div><div class="metric-meta">{{ '%.2f'|format(results['daily_energy']) }} <span data-i18n="units.kwhDay">kWh / DAY</span></div></article>
+                <article class="metric-card {% if results['daily_profit'] > 0 %}accent-green{% else %}accent-red{% endif %}"><div class="metric-top"><span data-i18n="result.dailyProfit">DAILY PROFIT</span><i class="bi bi-graph-up-arrow"></i></div><div class="metric-value">{{ '${:,.2f}'.format(results['daily_profit']) }}</div><div class="metric-meta" data-i18n="result.netAfterPool">NET AFTER POOL FEE</div></article>
             </div>
         </section>
 
-        <section class="row g-4 dashboard-lower">
-            <div class="col-xl-7">
-                <article class="dashboard-panel chart-panel h-100">
-                    <div class="panel-heading"><div><p class="eyebrow mb-2" data-i18n="result.operatingMargin">OPERATING MARGIN</p><h2 data-i18n="result.revenueVsElectricity">Revenue vs. electricity</h2></div><span class="panel-index">24H</span></div>
-                    <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
-                    <div class="chart-foot"><span><i class="legend-dot revenue-dot"></i> <span data-i18n="result.revenue">Revenue</span></span><span><i class="legend-dot energy-dot"></i> <span data-i18n="result.electricity">Electricity</span></span><span class="ms-auto text-muted"><span data-i18n="result.poolFee">Pool fee</span>: {{ '${:,.2f}'.format(results['pool_fee']) }} <span data-i18n="units.perDay">/ day</span></span></div>
-                </article>
-            </div>
-            <div class="col-xl-5">
-                <article class="dashboard-panel roi-panel h-100">
-                    <div class="panel-heading"><div><p class="eyebrow mb-2" data-i18n="result.roiAnalysis">ROI ANALYSIS</p><h2 data-i18n="result.capitalRecovery">Capital recovery</h2></div><i class="bi bi-three-dots panel-menu"></i></div>
-                    <div class="payback-display"><span data-i18n="result.paybackPeriod">PAYBACK PERIOD</span><strong>{% if results['payback_days'] is not none %}{% if results['payback_days'] < 0.005 %}<span data-i18n="result.lessThanOneDay">&lt;1 Day</span>{% else %}{{ '%.2f'|format(results['payback_days']) }} <small data-i18n="units.days">DAYS</small>{% endif %}{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
-                    <div class="progress-label"><span data-i18n="result.recoveryView">365-DAY RECOVERY VIEW</span><span>{% if results['payback_days'] is not none %}{{ '%.0f'|format(results['recovery_progress']) }}%{% else %}0%{% endif %}</span></div>
-                    <div class="progress recovery-progress"><div class="progress-bar" style="width: {{ results['recovery_progress'] }}%"></div></div>
-                    <div class="roi-list">
-                        <div><span data-i18n="result.monthlyProfit">Monthly Profit</span><strong class="{% if results['monthly_profit'] < 0 %}negative{% endif %}">{{ '${:,.2f}'.format(results['monthly_profit']) }}</strong></div>
-                        <div><span data-i18n="result.annualProfit">Annual Profit</span><strong class="{% if results['annual_profit'] < 0 %}negative{% endif %}">{{ '${:,.2f}'.format(results['annual_profit']) }}</strong></div>
-                        <div><span data-i18n="result.annualROI">Annual ROI</span><strong class="{% if results['annual_roi'] < 0 %}negative{% endif %}">{{ '%.2f'|format(results['annual_roi']) }}%</strong></div>
-                        <div><span data-i18n="result.breakEvenElectricity">Break-even Electricity</span><strong>{% if results['break_even_electricity_price'] is not none %}${{ '%.4f'|format(results['break_even_electricity_price']) }}/kWh{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
-                    </div>
-                </article>
-            </div>
+        <section class="dashboard-grid">
+            <article class="dashboard-panel chart-panel">
+                <div class="panel-heading"><div><p class="eyebrow" data-i18n="result.operatingMargin">OPERATING MARGIN</p><h2 data-i18n="result.revenueVsElectricity">Revenue vs. electricity</h2></div><span class="panel-code" data-i18n="common.chartWindow">24H / USD</span></div>
+                <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+                <div class="chart-foot"><span><i class="legend-dot revenue-dot"></i> <span data-i18n="result.revenue">Revenue</span></span><span><i class="legend-dot energy-dot"></i> <span data-i18n="result.electricity">Electricity</span></span><span class="chart-foot-note"><span data-i18n="result.poolFee">Pool fee</span>: {{ '${:,.2f}'.format(results['pool_fee']) }} <span data-i18n="units.perDay">/ day</span></span></div>
+            </article>
+
+            <article class="dashboard-panel roi-panel">
+                <div class="panel-heading"><div><p class="eyebrow" data-i18n="result.roiAnalysis">ROI ANALYSIS</p><h2 data-i18n="result.capitalRecovery">Capital recovery</h2></div><i class="bi bi-three-dots panel-menu"></i></div>
+                <div class="payback-display"><span data-i18n="result.paybackPeriod">PAYBACK PERIOD</span><strong>{% if results['payback_days'] is not none %}{% if results['payback_days'] < 0.005 %}<span data-i18n="result.lessThanOneDay">&lt;1 Day</span>{% else %}{{ '%.2f'|format(results['payback_days']) }} <small data-i18n="units.days">DAYS</small>{% endif %}{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
+                <div class="progress-label"><span data-i18n="result.recoveryView">365-DAY RECOVERY VIEW</span><span>{% if results['payback_days'] is not none %}{{ '%.0f'|format(results['recovery_progress']) }}%{% else %}0%{% endif %}</span></div>
+                <div class="progress recovery-progress"><div class="progress-bar" style="width: {{ results['recovery_progress'] }}%"></div></div>
+                <div class="roi-list">
+                    <div><span data-i18n="result.monthlyProfit">Monthly Profit</span><strong class="{% if results['monthly_profit'] < 0 %}negative{% endif %}">{{ '${:,.2f}'.format(results['monthly_profit']) }}</strong></div>
+                    <div><span data-i18n="result.annualProfit">Annual Profit</span><strong class="{% if results['annual_profit'] < 0 %}negative{% endif %}">{{ '${:,.2f}'.format(results['annual_profit']) }}</strong></div>
+                    <div><span data-i18n="result.annualROI">Annual ROI</span><strong class="{% if results['annual_roi'] < 0 %}negative{% endif %}">{{ '%.2f'|format(results['annual_roi']) }}%</strong></div>
+                    <div><span data-i18n="result.breakEvenElectricity">Break-even Electricity</span><strong>{% if results['break_even_electricity_price'] is not none %}${{ '%.4f'|format(results['break_even_electricity_price']) }}/kWh{% else %}<span data-i18n="common.na">N/A</span>{% endif %}</strong></div>
+                </div>
+            </article>
         </section>
 
         <section class="calculation-details">
-            <div class="section-label"><span data-i18n="result.calculationDetails">CALCULATION DETAILS</span><span class="section-rule"></span></div>
+            <div class="section-label"><span data-i18n="result.calculationDetails">CALCULATION DETAILS</span><span class="section-rule"></span><span class="section-context" data-i18n="result.auditTrail">AUDIT TRAIL</span></div>
             <div class="calculation-grid">
                 <div><span data-i18n="result.networkDailyProduction">Network Daily Production</span><strong>{{ '%.8f'|format(results['network_daily_coin_production']) }} {{ results['coin'] }}/day</strong></div>
                 <div><span data-i18n="result.miningShare">Mining Share</span><strong>{{ '%.4f'|format(results['mining_share_percent']) }}%</strong></div>
@@ -107,7 +102,7 @@
                 <div><span>Actual Miner Share</span><strong>{{ '%.6f'|format(results['hashrate_share'] * 100) }}%</strong></div>
                 <div><span data-i18n="result.estimatedDailyCoin">Estimated Daily Coin</span><strong>{{ '%.8f'|format(results['estimated_daily_coin']) }} {{ results['coin'] }}/day</strong></div>
                 <div><span data-i18n="result.coinPriceDetail">Coin price</span><strong>${{ '{:,.2f}'.format(results['coin_price']) }}</strong></div>
-                <div class="calculation-formula"><span data-i18n="result.revenueFormula">total coin × price</span></div>
+                <div class="calculation-formula"><span data-i18n="result.revenueFormula">total coin x price</span></div>
             </div>
         </section>
 
@@ -117,6 +112,6 @@
     <script id="chart-data" type="application/json">{{ {'revenue': results['daily_revenue'], 'electricity': results['daily_electricity_cost']}|tojson }}</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script src="{{ url_for('static', filename='translations.js') }}?v=ui-20260806-4"></script>
-    <script src="{{ url_for('static', filename='script.js') }}?v=ui-20260806-4"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=ui-20260806-8"></script>
 </body>
 </html>

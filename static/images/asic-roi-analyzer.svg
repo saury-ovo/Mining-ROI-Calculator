@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">ASIC ROI Analyzer</title>
+  <desc id="desc">An ASIC chip with an upward return arrow</desc>
+  <g fill="none" stroke="#4bb8ff" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="31" y="31" width="66" height="66" rx="8" stroke-width="6"/>
+    <rect x="44" y="44" width="40" height="40" rx="4" stroke-width="4" opacity=".9"/>
+    <path d="M18 43h13M18 64h13M18 85h13M97 43h13M97 64h13M97 85h13M43 18v13M64 18v13M85 18v13M43 97v13M64 97v13M85 97v13" stroke-width="5"/>
+    <path d="M52 70 61 61l8 7 16-19" stroke="#c8f36a" stroke-width="6"/>
+    <path d="M74 49h11v11" stroke="#c8f36a" stroke-width="6"/>
+  </g>
+</svg>

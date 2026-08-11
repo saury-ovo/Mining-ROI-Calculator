@@ -3,8 +3,8 @@
     const translations = {
         en: {
             common: {
-                browserTitle: 'Mining Machine ROI Calculator',
-                resultBrowserTitle: 'ROI Analysis | {miner}',
+                browserTitle: 'ASIC ROI Analyzer',
+                resultBrowserTitle: 'ASIC ROI Analyzer | {miner}',
                 analyticsWorkspace: 'ANALYTICS WORKSPACE',
                 modelInput: 'USD / 24H MODEL',
                 modelComplete: 'MODEL COMPLETE',
@@ -115,8 +115,8 @@
         },
         zh: {
             common: {
-                browserTitle: '矿机投资收益分析器',
-                resultBrowserTitle: '收益分析 | {miner}',
+                browserTitle: 'ASIC ROI Analyzer',
+                resultBrowserTitle: 'ASIC ROI Analyzer | {miner}',
                 analyticsWorkspace: '分析工作区',
                 modelInput: '美元 / 24小时模型',
                 modelComplete: '模型完成',
@@ -176,7 +176,7 @@
         },
         ja: {
             common: {
-                browserTitle: 'マイニングROI計算ツール', resultBrowserTitle: 'ROI分析 | {miner}', analyticsWorkspace: '分析ワークスペース',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '分析ワークスペース',
                 modelInput: 'USD / 24時間モデル', modelComplete: 'モデル完了', language: '言語', optional: '任意',
                 calculateROI: 'ROIを計算', editAssumptions: '前提を編集', na: '該当なし'
             },
@@ -216,7 +216,7 @@
         },
         ko: {
             common: {
-                browserTitle: '채굴 ROI 계산기', resultBrowserTitle: 'ROI 분석 | {miner}', analyticsWorkspace: '분석 작업 공간', modelInput: 'USD / 24시간 모델',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '분석 작업 공간', modelInput: 'USD / 24시간 모델',
                 modelComplete: '모델 완료', language: '언어', optional: '선택 사항', calculateROI: 'ROI 계산', editAssumptions: '가정 편집', na: '해당 없음'
             },
             index: {
@@ -250,7 +250,7 @@
         },
         es: {
             common: {
-                browserTitle: 'Calculadora ROI de Minería', resultBrowserTitle: 'Análisis ROI | {miner}', analyticsWorkspace: 'ESPACIO DE ANÁLISIS', modelInput: 'USD / MODELO 24H',
+                browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: 'ESPACIO DE ANÁLISIS', modelInput: 'USD / MODELO 24H',
                 modelComplete: 'MODELO COMPLETO', language: 'Idioma', optional: 'OPCIONAL', calculateROI: 'Calcular ROI', editAssumptions: 'Editar supuestos', na: 'N/D'
             },
             index: {
@@ -314,6 +314,82 @@
     translations.es.result.networkDailyProduction = 'Producci\u00f3n diaria de la red';
     translations.es.result.miningShare = 'Participaci\u00f3n minera';
     translations.es.result.estimatedDailyCoin = 'Monedas diarias estimadas';
+
+    translations.en.index.marketLoading = 'Loading market data...';
+    translations.en.index.marketUpdated = 'Market data updated. Manual inputs remain in control.';
+    translations.en.index.marketPartial = 'Some market data is unavailable. Enter missing values manually.';
+    translations.en.index.marketManual = 'Market data unavailable. Please enter values manually.';
+    translations.en.index.marketSource = 'Source';
+    translations.en.index.marketFetchedAt = 'Fetched';
+    translations.en.index.marketObservedAt = 'Observed';
+    translations.zh.index.marketLoading = '\u6b63\u5728\u52a0\u8f7d\u5e02\u573a\u6570\u636e...';
+    translations.zh.index.marketUpdated = '\u5e02\u573a\u6570\u636e\u5df2\u66f4\u65b0\u3002\u624b\u52a8\u8f93\u5165\u4f18\u5148\u3002';
+    translations.zh.index.marketPartial = '\u90e8\u5206\u5e02\u573a\u6570\u636e\u4e0d\u53ef\u7528\uff0c\u8bf7\u624b\u52a8\u8865\u5145\u7f3a\u5931\u503c\u3002';
+    translations.zh.index.marketManual = '\u5e02\u573a\u6570\u636e\u4e0d\u53ef\u7528\uff0c\u8bf7\u624b\u52a8\u8f93\u5165\u3002';
+    translations.zh.index.marketSource = '\u6570\u636e\u6765\u6e90';
+    translations.zh.index.marketFetchedAt = '\u83b7\u53d6\u65f6\u95f4';
+    translations.zh.index.marketObservedAt = '\u6570\u636e\u89c2\u6d4b\u65f6\u95f4';
+    translations.ja.index.marketLoading = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u8aad\u307f\u8fbc\u3093\u3067\u3044\u307e\u3059...';
+    translations.ja.index.marketUpdated = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u66f4\u65b0\u3057\u307e\u3057\u305f\u3002\u624b\u52d5\u5165\u529b\u304c\u512a\u5148\u3055\u308c\u307e\u3059\u3002';
+    translations.ja.index.marketPartial = '\u4e00\u90e8\u306e\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093\u3002\u4e0d\u8db3\u5024\u3092\u624b\u52d5\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+    translations.ja.index.marketManual = '\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3067\u304d\u307e\u305b\u3093\u3002\u5024\u3092\u624b\u52d5\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+    translations.ja.index.marketSource = '\u30bd\u30fc\u30b9';
+    translations.ja.index.marketFetchedAt = '\u53d6\u5f97\u6642\u523b';
+    translations.ja.index.marketObservedAt = '\u89b3\u6e2c\u6642\u523b';
+    translations.ko.index.marketLoading = '\uc2dc\uc7a5 \ub370\uc774\ud130 \ubd88\ub7ec\uc624\ub294 \uc911...';
+    translations.ko.index.marketUpdated = '\uc2dc\uc7a5 \ub370\uc774\ud130\uac00 \uc5c5\ub370\uc774\ud2b8\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uc218\ub3d9 \uc785\ub825\uc774 \uc6b0\uc120\ub429\ub2c8\ub2e4.';
+    translations.ko.index.marketPartial = '\uc77c\ubd80 \uc2dc\uc7a5 \ub370\uc774\ud130\ub97c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \ub204\ub77d\ub41c \uac12\uc744 \uc218\ub3d9\uc73c\ub85c \uc785\ub825\ud558\uc138\uc694.';
+    translations.ko.index.marketManual = '\uc2dc\uc7a5 \ub370\uc774\ud130\ub97c \uc0ac\uc6a9\ud560 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4. \uac12\uc744 \uc218\ub3d9\uc73c\ub85c \uc785\ub825\ud558\uc138\uc694.';
+    translations.ko.index.marketSource = '\ucd9c\ucc98';
+    translations.ko.index.marketFetchedAt = '\uc870\ud68c \uc2dc\uac01';
+    translations.ko.index.marketObservedAt = '\uad00\uce21 \uc2dc\uac01';
+    translations.es.index.marketLoading = 'Cargando datos de mercado...';
+    translations.es.index.marketUpdated = 'Datos de mercado actualizados. Las entradas manuales tienen prioridad.';
+    translations.es.index.marketPartial = 'Algunos datos de mercado no están disponibles. Introduce los valores faltantes manualmente.';
+    translations.es.index.marketManual = 'Datos de mercado no disponibles. Introduce los valores manualmente.';
+    translations.es.index.marketSource = 'Fuente';
+    translations.es.index.marketFetchedAt = 'Obtenido';
+    translations.es.index.marketObservedAt = 'Observado';
+
+    const monitorTranslations = {
+        en: {
+            common: { roiTerminal: 'ROI TERMINAL', modelLive: 'LIVE', window24h: '24H', storageLocal: 'LOCAL', panelInput: 'INPUT / 01', panelLive: 'LIVE / 01', chartWindow: '24H / USD' },
+            index: { telemetryModel: 'MODEL', telemetryWindow: 'WINDOW', telemetryStore: 'STORE', identity: 'IDENTITY', computeProfile: 'COMPUTE PROFILE', operatingAssumptions: 'OPERATING ASSUMPTIONS', monitorTitle: 'OPERATING MONITOR', monitorSubtitle: 'Secondary operating signals', monitorInputStatus: 'INPUT READINESS', totalPowerLoad: 'Total Power Load', perMachinePowerCost: 'Per-Machine Daily Power Cost', selectedAsset: 'Selected Asset', monitorDescription: 'Secondary signals update from your current inputs. Core ROI results appear after submission.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / MACHINE / DAY' },
+            result: { auditTrail: 'AUDIT TRAIL' },
+        },
+        zh: {
+            common: { roiTerminal: '\u6536\u76ca\u7ec8\u7aef', modelLive: '\u5b9e\u65f6', window24h: '24\u5c0f\u65f6', storageLocal: '\u672c\u5730', panelInput: '\u8f93\u5165 / 01', panelLive: '\u5b9e\u65f6 / 01', chartWindow: '24\u5c0f\u65f6 / \u7f8e\u5143' },
+            index: { telemetryModel: '\u6a21\u578b', telemetryWindow: '\u5468\u671f', telemetryStore: '\u5b58\u50a8', identity: '\u8d44\u4ea7\u8eab\u4efd', computeProfile: '\u7b97\u529b\u914d\u7f6e', operatingAssumptions: '\u8fd0\u8425\u5047\u8bbe', monitorTitle: '\u8fd0\u8425\u76d1\u89c6', monitorSubtitle: '\u8f93\u5165\u8fd0\u8425\u4fe1\u53f7', monitorInputStatus: '\u8f93\u5165\u5c31\u7eea\u5ea6', totalPowerLoad: '\u603b\u529f\u7387\u8d1f\u8f7d', perMachinePowerCost: '\u5355\u53f0\u6bcf\u65e5\u7535\u529b\u6210\u672c', selectedAsset: '\u5f53\u524d\u8d44\u4ea7', monitorDescription: '\u4e8c\u7ea7\u4fe1\u53f7\u968f\u5f53\u524d\u8f93\u5165\u66f4\u65b0\u3002\u6838\u5fc3 ROI \u7ed3\u679c\u5c06\u5728\u63d0\u4ea4\u540e\u663e\u793a\u3002' },
+            units: { kilowatt: '\u5343\u74e6', usdMachineDay: '\u7f8e\u5143 / \u5355\u53f0 / \u65e5' },
+            result: { auditTrail: '\u5ba1\u8ba1\u8f68\u8ff9' },
+        },
+        ja: {
+            common: { roiTerminal: 'ROI \u30bf\u30fc\u30df\u30ca\u30eb', modelLive: '\u30e9\u30a4\u30d6', window24h: '24\u6642\u9593', storageLocal: '\u30ed\u30fc\u30ab\u30eb', panelInput: '\u5165\u529b / 01', panelLive: '\u30e9\u30a4\u30d6 / 01', chartWindow: '24\u6642\u9593 / USD' },
+            index: { telemetryModel: '\u30e2\u30c7\u30eb', telemetryWindow: '\u671f\u9593', telemetryStore: '\u4fdd\u5b58\u5148', identity: '\u30a2\u30bb\u30c3\u30c8\u60c5\u5831', computeProfile: '\u30b3\u30f3\u30d4\u30e5\u30fc\u30c8\u8a2d\u5b9a', operatingAssumptions: '\u904b\u7528\u524d\u63d0', monitorTitle: '\u904b\u7528\u30e2\u30cb\u30bf\u30fc', monitorSubtitle: '\u4e8c\u6b21\u904b\u7528\u30b7\u30b0\u30ca\u30eb', monitorInputStatus: '\u5165\u529b\u6e96\u5099\u5ea6', totalPowerLoad: '\u7dcf\u96fb\u529b\u8ca0\u8377', perMachinePowerCost: '\u30de\u30b7\u30f3\u5358\u4f4d\u306e\u65e5\u6b21\u96fb\u6c17\u4ee3', selectedAsset: '\u9078\u629e\u8cc7\u7523', monitorDescription: '\u4e8c\u6b21\u30b7\u30b0\u30ca\u30eb\u306f\u5165\u529b\u306b\u5fdc\u3058\u3066\u66f4\u65b0\u3055\u308c\u307e\u3059\u3002\u4e3b\u8981 ROI \u7d50\u679c\u306f\u9001\u4fe1\u5f8c\u306b\u8868\u793a\u3055\u308c\u307e\u3059\u3002' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / \u53f0 / \u65e5' },
+            result: { auditTrail: '\u76e3\u67fb\u30c8\u30ec\u30fc\u30b9' },
+        },
+        ko: {
+            common: { roiTerminal: 'ROI \ud130\ubbf8\ub110', modelLive: '\uc2e4\uc2dc\uac04', window24h: '24\uc2dc\uac04', storageLocal: '\ub85c\uceec', panelInput: '\uc785\ub825 / 01', panelLive: '\uc2e4\uc2dc\uac04 / 01', chartWindow: '24\uc2dc\uac04 / USD' },
+            index: { telemetryModel: '\ubaa8\ub378', telemetryWindow: '\uae30\uac04', telemetryStore: '\uc800\uc7a5', identity: '\uc790\uc0b0 \uc815\ubcf4', computeProfile: '\uc5f0\uc0b0 \ud504\ub85c\ud30c\uc77c', operatingAssumptions: '\uc6b4\uc601 \uac00\uc815', monitorTitle: '\uc6b4\uc601 \ubaa8\ub2c8\ud130', monitorSubtitle: '\uc785\ub825 \uae30\ubc18 \ubcf4\uc870 \uc2e0\ud638', monitorInputStatus: '\uc785\ub825 \uc900\ube44\ub3c4', totalPowerLoad: '\ucd1d \uc804\ub825 \ubd80\ud558', perMachinePowerCost: '\uba38\uc2e0\ubcc4 \uc77c\uc77c \uc804\ub825\ube44', selectedAsset: '\uc120\ud0dd \uc790\uc0b0', monitorDescription: '\ubcf4\uc870 \uc2e0\ud638\ub294 \ud604\uc7ac \uc785\ub825\uc5d0 \ub530\ub77c \uc5c5\ub370\uc774\ud2b8\ub429\ub2c8\ub2e4. \ud575\uc2ec ROI \uacb0\uacfc\ub294 \uc81c\ucd9c \ud6c4 \ud45c\uc2dc\ub429\ub2c8\ub2e4.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / \ub300 / \uc77c' },
+            result: { auditTrail: '\uac80\uc99d \uae30\ub85d' },
+        },
+        es: {
+            common: { roiTerminal: 'TERMINAL ROI', modelLive: 'EN VIVO', window24h: '24H', storageLocal: 'LOCAL', panelInput: 'ENTRADA / 01', panelLive: 'EN VIVO / 01', chartWindow: '24H / USD' },
+            index: { telemetryModel: 'MODELO', telemetryWindow: 'PERIODO', telemetryStore: 'GUARDADO', identity: 'IDENTIDAD', computeProfile: 'PERFIL DE C\u00d3MPUTO', operatingAssumptions: 'SUPUESTOS OPERATIVOS', monitorTitle: 'MONITOR OPERATIVO', monitorSubtitle: 'Se\u00f1ales operativas secundarias', monitorInputStatus: 'PREPARACI\u00d3N DE ENTRADA', totalPowerLoad: 'Carga total de potencia', perMachinePowerCost: 'Coste el\u00e9ctrico diario por m\u00e1quina', selectedAsset: 'Activo seleccionado', monitorDescription: 'Las se\u00f1ales secundarias se actualizan con las entradas actuales. Los resultados ROI aparecen despu\u00e9s del env\u00edo.' },
+            units: { kilowatt: 'kW', usdMachineDay: 'USD / M\u00c1QUINA / D\u00cdA' },
+            result: { auditTrail: 'TRAZA DE AUDITOR\u00cdA' },
+        },
+    };
+
+    Object.keys(monitorTranslations).forEach((locale) => {
+        const source = monitorTranslations[locale];
+        Object.keys(source).forEach((section) => {
+            Object.assign(translations[locale][section], source[section]);
+        });
+    });
 
     const localeTags = { en: 'en', zh: 'zh-CN', ja: 'ja', ko: 'ko', es: 'es' };
     const getValue = (locale, key) => key.split('.').reduce((value, part) => value && value[part], translations[locale]);

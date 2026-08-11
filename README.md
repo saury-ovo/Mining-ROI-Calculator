@@ -1,8 +1,8 @@
-# Mining ROI Calculator
+# ASIC ROI Analyzer
 
 A professional mining investment analysis dashboard for miners and cryptocurrency investors.
 
-Mining ROI Calculator helps users evaluate mining machine profitability based on equipment, hashrate, network conditions, electricity costs, and market assumptions.
+ASIC ROI Analyzer helps users evaluate mining machine profitability based on equipment, hashrate, network conditions, electricity costs, and market assumptions.
 
 ## Highlights
 

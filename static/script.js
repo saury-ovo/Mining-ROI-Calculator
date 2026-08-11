@@ -140,10 +140,18 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCoinOptions();
         renderSelectedCoin();
         syncCoinFields();
+        networkHashrateUnitSelect?.setAttribute(
+            'data-market-unit-source',
+            networkHashrateUnitSelect.dataset.selectedUnit ? 'manual' : 'auto',
+        );
         coinSelect.addEventListener('change', () => {
+            networkHashrateUnitSelect?.setAttribute('data-market-unit-source', 'auto');
             syncCoinFields();
             renderSelectedCoin();
             renderCoinOptions();
+            resetMarketApiValues();
+            updateInputMonitor();
+            requestMarketData();
         });
         coinDropdownButton?.addEventListener('click', () => {
             setDropdownOpen(coinDropdownButton.getAttribute('aria-expanded') !== 'true');
@@ -184,6 +192,296 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         input.value = value;
     };
+
+    const monitorRequiredFields = [
+        'miner_name',
+        'coin',
+        'hashrate',
+        'network_hashrate',
+        'quantity',
+        'machine_price',
+        'power_consumption',
+        'electricity_price',
+        'network_daily_coin_production',
+        'coin_price',
+    ];
+
+    const readMonitorNumber = (id) => {
+        const input = document.getElementById(id);
+        if (!input) return null;
+        const rawValue = input.value.trim();
+        if (!rawValue || rawValue === '.' || rawValue.endsWith('.')) return null;
+        const numericValue = Number(rawValue);
+        return Number.isFinite(numericValue) ? numericValue : null;
+    };
+
+    const isMonitorFieldReady = (id) => {
+        if (id === 'miner_name') return Boolean(document.getElementById(id)?.value.trim());
+        if (id === 'coin') return Boolean(getCoinSettings());
+        const input = document.getElementById(id);
+        const value = readMonitorNumber(id);
+        if (!input || value === null) return false;
+        if (id === 'quantity') return Number.isInteger(value);
+        return value >= 0;
+    };
+
+    const formatMonitorValue = (value, digits = 2) => (
+        Number.isFinite(value) ? value.toFixed(digits) : '--'
+    );
+
+    const updateInputMonitor = () => {
+        const readiness = document.getElementById('live-input-readiness');
+        const totalPower = document.getElementById('live-total-power');
+        const machinePowerCost = document.getElementById('live-machine-power-cost');
+        const selectedCoin = document.getElementById('live-selected-coin');
+        const selectedAlgorithm = document.getElementById('live-selected-algorithm');
+
+        if (readiness) {
+            const readyCount = monitorRequiredFields.reduce(
+                (count, field) => count + (isMonitorFieldReady(field) ? 1 : 0),
+                0,
+            );
+            readiness.textContent = `${readyCount} / ${monitorRequiredFields.length}`;
+        }
+
+        const power = readMonitorNumber('power_consumption');
+        const quantity = readMonitorNumber('quantity');
+        const electricityPrice = readMonitorNumber('electricity_price');
+
+        if (totalPower) {
+            const totalPowerKw = power !== null && quantity !== null
+                ? power * quantity / 1000
+                : null;
+            totalPower.textContent = formatMonitorValue(totalPowerKw);
+        }
+
+        if (machinePowerCost) {
+            const dailyCost = power !== null && electricityPrice !== null
+                ? power / 1000 * 24 * electricityPrice
+                : null;
+            machinePowerCost.textContent = dailyCost === null
+                ? '--'
+                : `$${formatMonitorValue(dailyCost)}`;
+        }
+
+        const settings = getCoinSettings();
+        if (selectedCoin) selectedCoin.textContent = settings ? (settings.ticker || getCoinId(coinSelect.value)) : '--';
+        if (selectedAlgorithm) selectedAlgorithm.textContent = settings?.algorithm || '--';
+    };
+
+    const marketFieldIds = [
+        'coin_price',
+        'network_daily_coin_production',
+        'network_hashrate',
+    ];
+    const hashrateFactors = {
+        'H/s': 1,
+        'kH/s': 10 ** 3,
+        'MH/s': 10 ** 6,
+        'GH/s': 10 ** 9,
+        'TH/s': 10 ** 12,
+        'PH/s': 10 ** 15,
+        'EH/s': 10 ** 18,
+        'Sol/s': 1,
+        'kSol/s': 10 ** 3,
+        'MSol/s': 10 ** 6,
+        'GSol/s': 10 ** 9,
+    };
+    let marketRequestToken = 0;
+    let marketHashrateBaseValue = null;
+    let marketRefreshTimer = null;
+
+    const marketInput = (field) => document.getElementById(field);
+    const formatMarketNumber = (value) => {
+        if (!Number.isFinite(value)) return '';
+        return Number(value.toPrecision(12)).toString();
+    };
+
+    const setMarketStatus = (key, state = '') => {
+        const status = document.getElementById('market-data-status');
+        const message = document.getElementById('market-data-message');
+        if (!status || !message) return;
+        if (!key) {
+            status.hidden = true;
+            status.dataset.i18nKey = '';
+            return;
+        }
+        status.hidden = false;
+        status.dataset.i18nKey = key;
+        status.dataset.state = state;
+        status.classList.toggle('is-loading', state === 'loading');
+        status.classList.toggle('is-warning', state === 'warning');
+        message.textContent = translate(key);
+    };
+
+    const formatMarketTimestamp = (value) => {
+        const date = new Date(value);
+        if (!value || Number.isNaN(date.getTime())) return '--';
+        const pad = number => String(number).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    };
+
+    const setMarketMeta = (fields, fetchedAt) => {
+        const meta = document.getElementById('market-data-meta');
+        const sourceValue = document.getElementById('market-data-source');
+        const fetchedValue = document.getElementById('market-data-fetched');
+        const observedValue = document.getElementById('market-data-observed');
+        if (!meta || !sourceValue || !fetchedValue || !observedValue) return;
+        const sources = Object.values(fields || {})
+            .map((field) => field?.source)
+            .filter(Boolean);
+        if (sources.length === 0) {
+            meta.hidden = true;
+            return;
+        }
+        sourceValue.textContent = [...new Set(sources)].join(', ');
+        fetchedValue.textContent = formatMarketTimestamp(fetchedAt);
+        const observedAt = Object.values(fields || {})
+            .map((field) => field?.observed_at)
+            .filter(Boolean)
+            .map((value) => new Date(value))
+            .filter((date) => !Number.isNaN(date.getTime()))
+            .sort((left, right) => right.getTime() - left.getTime())[0];
+        observedValue.textContent = observedAt ? formatMarketTimestamp(observedAt.toISOString()) : '--';
+        meta.hidden = false;
+    };
+
+    const setMarketValue = (field, value) => {
+        const input = marketInput(field);
+        if (!input) return false;
+        const source = input.dataset.marketSource || 'empty';
+        if (source === 'manual' || source === 'initial') return false;
+        if (!Number.isFinite(value)) {
+            if (source === 'api') input.value = '';
+            input.dataset.marketSource = 'empty';
+            return false;
+        }
+        input.value = formatMarketNumber(value);
+        input.dataset.marketSource = 'api';
+        return true;
+    };
+
+    const resetMarketApiValues = () => {
+        marketHashrateBaseValue = null;
+        setMarketMeta({});
+        marketFieldIds.forEach((field) => {
+            const input = marketInput(field);
+            if (input?.dataset.marketSource === 'api') {
+                input.value = '';
+                input.dataset.marketSource = 'empty';
+            }
+        });
+    };
+
+    const applyNetworkHashrate = (field) => {
+        const input = marketInput('network_hashrate');
+        if (!input || !field || !Number.isFinite(Number(field.base_value))) return false;
+        marketHashrateBaseValue = Number(field.base_value);
+        const recommendedUnit = field.recommended_unit;
+        const supportedUnits = Array.from(networkHashrateUnitSelect?.options || []).map((option) => option.value);
+        const unitSource = networkHashrateUnitSelect?.dataset.marketUnitSource || 'auto';
+        if (unitSource !== 'manual' && supportedUnits.includes(recommendedUnit)) {
+            networkHashrateUnitSelect.value = recommendedUnit;
+        }
+        const unit = networkHashrateUnitSelect?.value;
+        const factor = hashrateFactors[unit];
+        return factor ? setMarketValue('network_hashrate', marketHashrateBaseValue / factor) : false;
+    };
+
+    const requestMarketData = async () => {
+        const coinId = getCoinId(coinSelect?.value);
+        const settings = getCoinSettings();
+        if (!coinId || !settings) return;
+        const requestToken = ++marketRequestToken;
+        setMarketStatus('index.marketLoading', 'loading');
+        try {
+            const response = await fetch(`/api/market-data?coin=${encodeURIComponent(settings.ticker || coinId)}`, {
+                headers: { Accept: 'application/json' },
+            });
+            if (!response.ok) throw new Error(`Market data request failed with HTTP ${response.status}.`);
+            const payload = await response.json();
+            if (requestToken !== marketRequestToken || getCoinId(coinSelect?.value) !== coinId) return;
+
+            const fields = payload.fields || {};
+            if (fields.coin_price) {
+                setMarketValue('coin_price', Number(fields.coin_price.value));
+            } else {
+                setMarketValue('coin_price', NaN);
+            }
+            if (fields.network_daily_coin_production) {
+                setMarketValue('network_daily_coin_production', Number(fields.network_daily_coin_production.value));
+            } else {
+                setMarketValue('network_daily_coin_production', NaN);
+            }
+            if (fields.network_hashrate) {
+                applyNetworkHashrate(fields.network_hashrate);
+            } else {
+                setMarketValue('network_hashrate', NaN);
+                marketHashrateBaseValue = null;
+            }
+            setMarketMeta(fields, payload.fetched_at);
+            updateInputMonitor();
+            const missing = marketFieldIds.some((field) => !marketInput(field)?.value.trim());
+            setMarketStatus(
+                payload.warnings?.length || missing ? 'index.marketPartial' : 'index.marketUpdated',
+                payload.warnings?.length || missing ? 'warning' : '',
+            );
+        } catch (error) {
+            if (requestToken !== marketRequestToken) return;
+            marketHashrateBaseValue = null;
+            setMarketMeta({});
+            setMarketStatus('index.marketManual', 'warning');
+        }
+    };
+
+    const startMarketRefresh = () => {
+        if (!coinSelect) return;
+        if (marketRefreshTimer !== null) window.clearInterval(marketRefreshTimer);
+        marketRefreshTimer = window.setInterval(() => {
+            if (document.hidden || !getCoinSettings()) return;
+            requestMarketData();
+        }, 60 * 1000);
+    };
+
+    marketFieldIds.forEach((field) => {
+        const input = marketInput(field);
+        if (!input) return;
+        input.dataset.marketSource = input.value.trim() ? 'initial' : 'empty';
+        input.addEventListener('input', () => {
+            input.dataset.marketSource = 'manual';
+            if (field === 'network_hashrate') marketHashrateBaseValue = null;
+        });
+    });
+    networkHashrateUnitSelect?.addEventListener('change', () => {
+        networkHashrateUnitSelect.dataset.marketUnitSource = 'manual';
+        const input = marketInput('network_hashrate');
+        const factor = hashrateFactors[networkHashrateUnitSelect.value];
+        if (input?.dataset.marketSource === 'api' && factor && Number.isFinite(marketHashrateBaseValue)) {
+            input.value = formatMarketNumber(marketHashrateBaseValue / factor);
+        }
+        updateInputMonitor();
+    });
+    window.addEventListener('languagechange', () => {
+        const status = document.getElementById('market-data-status');
+        const message = document.getElementById('market-data-message');
+        if (status?.dataset.i18nKey && message) message.textContent = translate(status.dataset.i18nKey);
+    });
+    updateInputMonitor();
+    if (getCoinSettings()) requestMarketData();
+    startMarketRefresh();
+
+    monitorRequiredFields.forEach((field) => {
+        const input = document.getElementById(field);
+        input?.addEventListener('input', () => {
+            // Keep the in-progress string untouched; the monitor parses a snapshot only.
+            input.dataset.pendingValue = input.value;
+            updateInputMonitor();
+        });
+    });
+    [hashrateUnitSelect, networkHashrateUnitSelect].forEach((select) => {
+        select?.addEventListener('change', updateInputMonitor);
+    });
+    updateInputMonitor();
 
     decimalInputs.forEach((input) => {
         input.addEventListener('input', () => {
