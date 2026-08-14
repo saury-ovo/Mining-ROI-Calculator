@@ -289,6 +289,19 @@ class MarketDataServiceTests(unittest.TestCase):
         self.assertEqual(result["fields"], {})
         self.assertTrue(result["warnings"])
 
+    @patch("market_data.service.fetch_daily_coin_production_for_coin")
+    @patch("market_data.service.fetch_network_hashrate_for_coin")
+    @patch("market_data.service.fetch_coin_price")
+    def test_custom_coin_does_not_call_external_market_providers(self, fetch_price, fetch_hashrate, fetch_daily_coin):
+        result = get_market_data("CUSTOM")
+
+        self.assertEqual(result["coin"], "CUSTOM")
+        self.assertEqual(result["fields"], {})
+        self.assertIn("manual", result["warnings"][0].lower())
+        fetch_price.assert_not_called()
+        fetch_hashrate.assert_not_called()
+        fetch_daily_coin.assert_not_called()
+
 
 class MarketDataRouteTests(unittest.TestCase):
     def setUp(self):
@@ -310,6 +323,14 @@ class MarketDataRouteTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json["fields"], {})
+
+    def test_market_data_route_returns_manual_payload_for_custom_coin(self):
+        response = self.client.get("/api/market-data?coin=CUSTOM")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json["coin"], "CUSTOM")
+        self.assertEqual(response.json["fields"], {})
+        self.assertIn("manual", response.json["warnings"][0].lower())
 
     @patch("app.get_market_data", side_effect=RuntimeError("market service offline"))
     def test_index_remains_available_when_market_service_is_unavailable(self, get_market_data):

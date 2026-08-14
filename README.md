@@ -10,8 +10,6 @@ ASIC ROI Analyzer helps users evaluate mining machine profitability based on equ
 - Instant network hashrate dilution analysis when new mining equipment joins the network
 - Automatic conversion for H/s, kH/s, MH/s, GH/s, TH/s, PH/s, EH/s, and Sol/s units
 - Real cryptocurrency logo selector with automatic algorithm and unit mapping
-- Live operating monitor for input readiness, total power load, daily power cost, selected coin, and algorithm
-- Optional automatic market data retrieval for coin price, network hashrate, and network daily coin production
 - Clear separation between current daily performance and investment recovery analysis
 - Multi-language interface for international users
 - No database and no permanent user data storage
@@ -26,15 +24,13 @@ ASIC ROI Analyzer helps users evaluate mining machine profitability based on equ
 - Network hashrate and miner share analysis
 - Revenue versus electricity cost chart
 - Profit status indicator
-- Live input readiness and operating monitor
-- Automatic market data retrieval
-- Fallback market data providers
-- Field-level warnings when market data is unavailable
 - Responsive layout for desktop and mobile devices
 
 ## Supported Coins
 
-BTC, LTC, DOGE, DASH, KAS, ETC, ZEC, XMR, RVN, ERG, ALPH, and IRONFISH.
+BTC, LTC, DOGE, DASH, KAS, ETC, ZEC, XMR, RVN, ERG, ALPH, IRONFISH, and a multilingual Custom option.
+
+The Custom option keeps the standard hashrate units but lets the user optionally enter a coin name and algorithm. Network hashrate, network daily coin production, and coin price are always entered manually for Custom and are never fetched from market APIs.
 
 ## Input Parameters
 
@@ -88,15 +84,7 @@ Mining_ROI_Calculator/
 ├── app.py
 ├── calculator.py
 ├── unit_converter.py
-├── market_data/
-│   ├── chain_api.py
-│   ├── coin_config.py
-│   ├── hashrate_api.py
-│   ├── http_client.py
-│   ├── price_api.py
-│   └── service.py
 ├── test_calculator.py
-├── test_market_data.py
 ├── requirements.txt
 ├── .gitignore
 ├── templates/
@@ -129,23 +117,11 @@ python -m flask --app app run --host 127.0.0.1 --port 8080 --no-debugger --no-re
 python -B -m unittest -v test_calculator.py
 ```
 
-```powershell
-python -B -m unittest -v test_market_data.py
-```
-
-```powershell
-python -B -m unittest discover -v
-```
-
 ## Data and Privacy
 
 - No database is required
 - User input is used only for the current calculation
 - No user data is permanently stored
-- Market data retrieval is optional
-- Market data is temporarily cached in process memory
-- Public market data providers may be unavailable or return incomplete data
-- Users can enter market data manually when automatic retrieval is unavailable
 - No API keys, wallet keys, or external credentials are required
 
 ## License

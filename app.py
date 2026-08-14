@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import urlencode
 
 from flask import Flask, jsonify, render_template, request
 
@@ -13,7 +14,7 @@ app = Flask(__name__)
 @app.route("/", methods=["GET", "POST"])
 def index():
     """Render the input form and handle ROI calculations."""
-    form_data = request.form.to_dict() if request.method == "POST" else {}
+    form_data = request.form.to_dict() if request.method == "POST" else request.args.to_dict()
 
     if request.method == "POST":
         try:
@@ -23,6 +24,12 @@ def index():
             return render_template("index.html", error=str(error), form_data=form_data), 400
 
     return render_template("index.html", form_data=form_data)
+
+
+@app.template_filter("form_query")
+def form_query(form_data):
+    """Encode submitted form values for the edit-assumptions link."""
+    return urlencode(form_data or {})
 
 
 @app.get("/api/market-data")

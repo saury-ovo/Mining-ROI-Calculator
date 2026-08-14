@@ -177,6 +177,8 @@ h2 { font-size: 18px; font-weight: 700; letter-spacing: -.02em; margin: 0; }
 @keyframes market-data-pulse { 50% { opacity: .35; } }
 .calculate-btn { align-items: center; background: var(--lime); border: 0; border-radius: 0; color: #10170e; display: flex; font-family: var(--mono); font-size: 11px; font-weight: 600; justify-content: space-between; letter-spacing: .08em; min-height: 50px; padding: 15px 16px; text-transform: uppercase; width: 100%; }
 .calculate-btn:hover, .calculate-btn:focus { background: #e3ff9a; color: #10170e; }
+.clear-form-btn { align-items: center; background: transparent; border: 1px solid var(--line); border-radius: 0; color: var(--muted); display: flex; font-family: var(--mono); font-size: 10px; justify-content: space-between; letter-spacing: .08em; margin-top: 8px; min-height: 42px; padding: 11px 16px; text-transform: uppercase; width: 100%; }
+.clear-form-btn:hover, .clear-form-btn:focus { background: var(--surface-raised); border-color: var(--muted); color: var(--text); }
 .signal-panel { padding: 20px 22px 18px; }
 .signal-panel .section-label { margin-bottom: 12px; }
 .signal-row { align-items: center; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; padding: 11px 0; }

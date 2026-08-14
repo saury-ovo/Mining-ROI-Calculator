@@ -12,6 +12,7 @@
                 optional: 'OPTIONAL',
                 calculateROI: 'Calculate ROI',
                 editAssumptions: 'Edit assumptions',
+                clearForm: 'Clear form',
                 na: 'N/A'
             },
             index: {
@@ -86,6 +87,8 @@
                 unrealisticWarning: 'Input data may be unrealistic',
                 calculationDetails: 'Calculation Details',
                 dailyCoinOutputDetail: 'Daily coin output',
+                originalNetworkHashrate: 'Original Network Hashrate', minerTotalHashrate: 'My Total Hashrate',
+                effectiveNetworkHashrate: 'Effective Network Hashrate', actualMinerShare: 'Actual Miner Share',
                 coinPriceDetail: 'Coin price',
                 revenueFormula: 'output × price × quantity',
                 lessThanOneDay: '<1 Day',
@@ -124,6 +127,7 @@
                 optional: '可选',
                 calculateROI: '计算 ROI',
                 editAssumptions: '编辑假设',
+                clearForm: '一键清空',
                 na: '不适用'
             },
             index: {
@@ -165,6 +169,7 @@
             result: {
                 pageKicker: '投资分析', introCopy: '这是你部署 {quantity} 台矿机的表现快照。', statusProfitable: '盈利', statusLoss: '亏损',
                 unrealisticWarning: '输入数据可能不合理', calculationDetails: '计算明细', dailyCoinOutputDetail: '每日产币量', coinPriceDetail: '币价',
+                originalNetworkHashrate: '原始全网算力', minerTotalHashrate: '我的总算力', effectiveNetworkHashrate: '有效全网算力', actualMinerShare: '实际矿机占比',
                 revenueFormula: '产币量 × 币价 × 数量', lessThanOneDay: '<1 天',
                 coreMetrics: '核心指标', initialInvestment: '初始投资', capitalDeployed: '已投入资本', dailyRevenue: '每日收益',
                 grossMiningOutput: '挖矿总产出', electricityCost: '电费成本', dailyProfit: '每日利润', netAfterPool: '扣除矿池费后',
@@ -178,7 +183,7 @@
             common: {
                 browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '分析ワークスペース',
                 modelInput: 'USD / 24時間モデル', modelComplete: 'モデル完了', language: '言語', optional: '任意',
-                calculateROI: 'ROIを計算', editAssumptions: '前提を編集', na: '該当なし'
+                calculateROI: 'ROIを計算', editAssumptions: '前提を編集', clearForm: '入力をクリア', na: '該当なし'
             },
             index: {
                 pageKicker: '資本配分ツール', titleLead: 'マイニング', titleTail: 'ROI計算ツール',
@@ -206,6 +211,7 @@
             result: {
                 pageKicker: '投資分析', introCopy: '{quantity}台の展開に関するパフォーマンススナップショットです。', statusProfitable: '収益あり', statusLoss: '損失',
                 unrealisticWarning: '入力データが現実的でない可能性があります', calculationDetails: '計算詳細', dailyCoinOutputDetail: '1日のコイン出力', coinPriceDetail: 'コイン価格',
+                originalNetworkHashrate: '元のネットワークハッシュレート', minerTotalHashrate: '自分の総ハッシュレート', effectiveNetworkHashrate: '有効ネットワークハッシュレート', actualMinerShare: '実際のマイナーシェア',
                 revenueFormula: '出力 × 価格 × 数量', lessThanOneDay: '<1 日',
                 coreMetrics: '主要指標', initialInvestment: '初期投資', capitalDeployed: '投入資本', dailyRevenue: '日次収益', grossMiningOutput: '総マイニング収益',
                 electricityCost: '電力コスト', dailyProfit: '日次利益', netAfterPool: 'プール手数料控除後', operatingMargin: '運用マージン', revenueVsElectricity: '収益 vs 電力',
@@ -217,7 +223,7 @@
         ko: {
             common: {
                 browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: '분석 작업 공간', modelInput: 'USD / 24시간 모델',
-                modelComplete: '모델 완료', language: '언어', optional: '선택 사항', calculateROI: 'ROI 계산', editAssumptions: '가정 편집', na: '해당 없음'
+                modelComplete: '모델 완료', language: '언어', optional: '선택 사항', calculateROI: 'ROI 계산', editAssumptions: '가정 편집', clearForm: '입력 지우기', na: '해당 없음'
             },
             index: {
                 pageKicker: '자본 배분 도구', titleLead: '채굴', titleTail: 'ROI 계산기', introCopy: '다음 채굴 장비 배치를 위한 운영 모델을 만드세요.',
@@ -241,6 +247,7 @@
             result: {
                 pageKicker: '투자 분석', introCopy: '{quantity}대 배치의 성과 스냅샷입니다.', statusProfitable: '수익성 있음', statusLoss: '손실',
                 unrealisticWarning: '입력 데이터가 비현실적일 수 있습니다', calculationDetails: '계산 세부 정보', dailyCoinOutputDetail: '일일 코인 생산량', coinPriceDetail: '코인 가격',
+                originalNetworkHashrate: '기존 네트워크 해시레이트', minerTotalHashrate: '내 총 해시레이트', effectiveNetworkHashrate: '유효 네트워크 해시레이트', actualMinerShare: '실제 채굴기 점유율',
                 revenueFormula: '생산량 × 가격 × 수량', lessThanOneDay: '<1일', coreMetrics: '핵심 지표',
                 initialInvestment: '초기 투자', capitalDeployed: '투입 자본', dailyRevenue: '일일 수익', grossMiningOutput: '총 채굴 수익', electricityCost: '전기 비용',
                 dailyProfit: '일일 이익', netAfterPool: '풀 수수료 차감 후', operatingMargin: '운영 마진', revenueVsElectricity: '수익 vs 전기 비용', revenue: '수익',
@@ -251,7 +258,7 @@
         es: {
             common: {
                 browserTitle: 'ASIC ROI Analyzer', resultBrowserTitle: 'ASIC ROI Analyzer | {miner}', analyticsWorkspace: 'ESPACIO DE ANÁLISIS', modelInput: 'USD / MODELO 24H',
-                modelComplete: 'MODELO COMPLETO', language: 'Idioma', optional: 'OPCIONAL', calculateROI: 'Calcular ROI', editAssumptions: 'Editar supuestos', na: 'N/D'
+                modelComplete: 'MODELO COMPLETO', language: 'Idioma', optional: 'OPCIONAL', calculateROI: 'Calcular ROI', editAssumptions: 'Editar supuestos', clearForm: 'Limpiar formulario', na: 'N/D'
             },
             index: {
                 pageKicker: 'HERRAMIENTA DE ASIGNACIÓN DE CAPITAL', titleLead: 'Minería', titleTail: 'Calculadora ROI', introCopy: 'Crea un modelo operativo claro para tu próximo despliegue de minería.',
@@ -275,6 +282,7 @@
             result: {
                 pageKicker: 'ANÁLISIS DE INVERSIÓN', introCopy: 'Resumen de rendimiento para tu despliegue de {quantity} unidades.', statusProfitable: 'RENTABLE', statusLoss: 'PÉRDIDA',
                 unrealisticWarning: 'Los datos introducidos pueden no ser realistas', calculationDetails: 'Detalles del cálculo', dailyCoinOutputDetail: 'Producción diaria', coinPriceDetail: 'Precio de la moneda',
+                originalNetworkHashrate: 'Hashrate original de la red', minerTotalHashrate: 'Mi hashrate total', effectiveNetworkHashrate: 'Hashrate efectivo de la red', actualMinerShare: 'Participación real del minero',
                 revenueFormula: 'producción × precio × cantidad', lessThanOneDay: '<1 día', coreMetrics: 'MÉTRICAS CLAVE',
                 initialInvestment: 'INVERSIÓN INICIAL', capitalDeployed: 'CAPITAL INVERTIDO', dailyRevenue: 'INGRESOS DIARIOS', grossMiningOutput: 'PRODUCCIÓN BRUTA', electricityCost: 'COSTE ELÉCTRICO',
                 dailyProfit: 'BENEFICIO DIARIO', netAfterPool: 'NETO TRAS COMISIÓN', operatingMargin: 'MARGEN OPERATIVO', revenueVsElectricity: 'Ingresos vs. electricidad', revenue: 'Ingresos',
@@ -350,6 +358,27 @@
     translations.es.index.marketSource = 'Fuente';
     translations.es.index.marketFetchedAt = 'Obtenido';
     translations.es.index.marketObservedAt = 'Observado';
+
+    translations.en.coin.custom = 'Custom';
+    translations.zh.coin.custom = '\u81ea\u5b9a\u4e49';
+    translations.ja.coin.custom = '\u30ab\u30b9\u30bf\u30e0';
+    translations.ko.coin.custom = '\uc0ac\uc6a9\uc790 \uc815\uc758';
+    translations.es.coin.custom = 'Personalizado';
+    translations.en.fields.customName = 'Custom Coin Name';
+    translations.zh.fields.customName = '\u81ea\u5b9a\u4e49\u5e01\u79cd\u540d\u79f0';
+    translations.ja.fields.customName = '\u30ab\u30b9\u30bf\u30e0\u30b3\u30a4\u30f3\u540d';
+    translations.ko.fields.customName = '\uc0ac\uc6a9\uc790 \uc815\uc758 \ucf54\uc778 \uc774\ub984';
+    translations.es.fields.customName = 'Nombre de moneda personalizado';
+    translations.en.placeholders.customName = 'Optional custom coin name';
+    translations.zh.placeholders.customName = '\u53ef\u9009\u586b\u5199\u81ea\u5b9a\u4e49\u5e01\u79cd\u540d\u79f0';
+    translations.ja.placeholders.customName = '\u30ab\u30b9\u30bf\u30e0\u30b3\u30a4\u30f3\u540d\uff08\u4efb\u610f\uff09';
+    translations.ko.placeholders.customName = '\uc0ac\uc6a9\uc790 \uc815\uc758 \ucf54\uc778 \uc774\ub984\uff08\uc120\ud0dd\uc0ac\ud56d\uff09';
+    translations.es.placeholders.customName = 'Nombre personalizado opcional';
+    translations.en.index.marketCustomManual = 'Custom coin selected. Enter market data manually.';
+    translations.zh.index.marketCustomManual = '\u5df2\u9009\u62e9\u81ea\u5b9a\u4e49\u5e01\u79cd\uff0c\u8bf7\u624b\u52a8\u586b\u5199\u5e02\u573a\u6570\u636e\u3002';
+    translations.ja.index.marketCustomManual = '\u30ab\u30b9\u30bf\u30e0\u30b3\u30a4\u30f3\u304c\u9078\u629e\u3055\u308c\u307e\u3057\u305f\u3002\u5e02\u5834\u30c7\u30fc\u30bf\u3092\u624b\u52d5\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002';
+    translations.ko.index.marketCustomManual = '\uc0ac\uc6a9\uc790 \uc815\uc758 \ucf54\uc778\uc774 \uc120\ud0dd\ub418\uc5c8\uc2b5\ub2c8\ub2e4. \uc2dc\uc7a5 \ub370\uc774\ud130\ub97c \uc218\ub3d9\uc73c\ub85c \uc785\ub825\ud558\uc138\uc694.';
+    translations.es.index.marketCustomManual = 'Moneda personalizada seleccionada. Introduce los datos de mercado manualmente.';
 
     const monitorTranslations = {
         en: {

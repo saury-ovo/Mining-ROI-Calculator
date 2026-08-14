@@ -80,6 +80,10 @@
                                     <input id="coin" name="coin" type="hidden" data-selected-coin="{{ form_data.get('coin', '') }}" value="{{ form_data.get('coin', '') }}">
                                 </div>
                             </div>
+                            <div class="field-group field-wide custom-only-field" id="custom-name-field" hidden>
+                                <label for="custom_name" data-i18n="fields.customName">Custom Coin Name</label>
+                                <input id="custom_name" name="custom_name" type="text" class="form-control" data-i18n-placeholder="placeholders.customName" placeholder="Optional custom coin name" value="{{ form_data.get('custom_name', '') }}">
+                            </div>
                             <div class="field-group field-wide">
                                 <label for="algorithm" data-i18n="fields.algorithm">Algorithm</label>
                                 <input id="algorithm" name="algorithm" type="text" class="form-control readonly-control" data-i18n-placeholder="placeholders.algorithmAuto" placeholder="Auto selected from coin" value="{{ form_data.get('algorithm', '') }}" readonly aria-readonly="true">
@@ -170,13 +174,14 @@
                     </div>
                     <div class="summary-caption"><i class="bi bi-activity"></i><span data-i18n="index.monitorDescription">Secondary signals update from your current inputs. Core ROI results appear after submission.</span></div>
                     <button type="submit" class="calculate-btn"><span data-i18n="common.calculateROI">Calculate ROI</span><i class="bi bi-arrow-up-right"></i></button>
+                    <button type="button" class="clear-form-btn" id="clear-form-button"><span data-i18n="common.clearForm">Clear form</span><i class="bi bi-eraser"></i></button>
                 </section>
             </aside>
             </div>
         </form>
     </main>
-    <script src="{{ url_for('static', filename='coin_config.js') }}?v=ui-20260806-8"></script>
-    <script src="{{ url_for('static', filename='translations.js') }}?v=ui-20260806-4"></script>
-    <script src="{{ url_for('static', filename='script.js') }}?v=ui-20260806-8"></script>
+    <script src="{{ url_for('static', filename='coin_config.js') }}?v=custom-20260813-1"></script>
+    <script src="{{ url_for('static', filename='translations.js') }}?v=custom-20260813-1"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=custom-20260813-1"></script>
 </body>
 </html>

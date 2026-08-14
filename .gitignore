@@ -1,6 +1,12 @@
 **pycache**/
 __pycache__/
 *.pyc
+.pytest_cache/
+build/
+dist/
+packaging-output/
+*.spec
+*.exe
 .env
 .vscode/
 .idea/

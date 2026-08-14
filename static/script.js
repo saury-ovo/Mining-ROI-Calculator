@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const coinDropdownValue = document.getElementById('coinDropdownValue');
     const coinDropdownMenu = document.getElementById('coinDropdownMenu');
     const algorithmInput = document.getElementById('algorithm');
+    const customNameInput = document.getElementById('custom_name');
+    const customNameField = document.getElementById('custom-name-field');
     const hashrateUnitSelect = document.getElementById('hashrate_unit');
     const networkHashrateUnitSelect = document.getElementById('network_hashrate_unit');
 
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const ticker = document.createElement('span');
         ticker.className = 'coin-ticker';
-        ticker.textContent = settings.ticker || coin;
+        ticker.textContent = settings.labelKey ? translate(settings.labelKey) : (settings.ticker || coin);
         content.appendChild(ticker);
 
         return content;
@@ -126,9 +128,23 @@ document.addEventListener('DOMContentLoaded', () => {
             populateUnitSelect(networkHashrateUnitSelect, []);
             return;
         }
-        if (algorithmInput) algorithmInput.value = settings.algorithm;
+        const isCustom = Boolean(settings.isCustom);
+        if (algorithmInput) {
+            if (!isCustom) algorithmInput.value = settings.algorithm;
+            algorithmInput.readOnly = !isCustom;
+            algorithmInput.setAttribute('aria-readonly', String(!isCustom));
+            algorithmInput.classList.toggle('readonly-control', !isCustom);
+        }
+        if (customNameField) customNameField.hidden = !isCustom;
         populateUnitSelect(hashrateUnitSelect, settings.hash_unit || []);
         populateUnitSelect(networkHashrateUnitSelect, settings.network_hash_unit || settings.hash_unit || []);
+    };
+
+    const syncResultCoinLabel = () => {
+        document.querySelectorAll('.custom-coin-label').forEach((resultCoin) => {
+            if (resultCoin.dataset.defaultCoin !== 'CUSTOM') return;
+            resultCoin.textContent = resultCoin.dataset.customName || translate('coin.custom');
+        });
     };
 
     if (coinSelect) {
@@ -140,11 +156,26 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCoinOptions();
         renderSelectedCoin();
         syncCoinFields();
+        syncResultCoinLabel();
         networkHashrateUnitSelect?.setAttribute(
             'data-market-unit-source',
             networkHashrateUnitSelect.dataset.selectedUnit ? 'manual' : 'auto',
         );
+        let previousCoinId = selectedCoinId;
         coinSelect.addEventListener('change', () => {
+            const nextCoinId = getCoinId(coinSelect.value);
+            if (previousCoinId === 'CUSTOM' && nextCoinId !== 'CUSTOM') {
+                marketFieldIds.forEach((field) => {
+                    const input = marketInput(field);
+                    if (input?.dataset.marketSource === 'manual') {
+                        input.value = '';
+                        input.dataset.marketSource = 'empty';
+                    }
+                });
+            }
+            if (nextCoinId === 'CUSTOM' && previousCoinId !== 'CUSTOM' && algorithmInput) {
+                algorithmInput.value = '';
+            }
             networkHashrateUnitSelect?.setAttribute('data-market-unit-source', 'auto');
             syncCoinFields();
             renderSelectedCoin();
@@ -152,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resetMarketApiValues();
             updateInputMonitor();
             requestMarketData();
+            previousCoinId = nextCoinId;
         });
         coinDropdownButton?.addEventListener('click', () => {
             setDropdownOpen(coinDropdownButton.getAttribute('aria-expanded') !== 'true');
@@ -265,8 +297,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const settings = getCoinSettings();
-        if (selectedCoin) selectedCoin.textContent = settings ? (settings.ticker || getCoinId(coinSelect.value)) : '--';
-        if (selectedAlgorithm) selectedAlgorithm.textContent = settings?.algorithm || '--';
+        if (selectedCoin) {
+            selectedCoin.textContent = settings
+                ? (settings.isCustom ? (customNameInput?.value.trim() || translate('coin.custom')) : (settings.ticker || getCoinId(coinSelect.value)))
+                : '--';
+        }
+        if (selectedAlgorithm) {
+            selectedAlgorithm.textContent = settings?.isCustom
+                ? (algorithmInput?.value.trim() || '--')
+                : (settings?.algorithm || '--');
+        }
     };
 
     const marketFieldIds = [
@@ -392,6 +432,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const coinId = getCoinId(coinSelect?.value);
         const settings = getCoinSettings();
         if (!coinId || !settings) return;
+        if (settings.isCustom) {
+            setMarketStatus('index.marketCustomManual', 'warning');
+            setMarketMeta({});
+            updateInputMonitor();
+            return;
+        }
         const requestToken = ++marketRequestToken;
         setMarketStatus('index.marketLoading', 'loading');
         try {
@@ -465,6 +511,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const status = document.getElementById('market-data-status');
         const message = document.getElementById('market-data-message');
         if (status?.dataset.i18nKey && message) message.textContent = translate(status.dataset.i18nKey);
+        const resultCoin = document.getElementById('result-coin-name');
+        syncResultCoinLabel();
     });
     updateInputMonitor();
     if (getCoinSettings()) requestMarketData();
@@ -478,6 +526,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateInputMonitor();
         });
     });
+    customNameInput?.addEventListener('input', updateInputMonitor);
+    algorithmInput?.addEventListener('input', updateInputMonitor);
+    syncResultCoinLabel();
     [hashrateUnitSelect, networkHashrateUnitSelect].forEach((select) => {
         select?.addEventListener('change', updateInputMonitor);
     });
@@ -500,6 +551,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const inputForm = document.querySelector('form[method="post"]');
+    const clearFormButton = document.getElementById('clear-form-button');
+    clearFormButton?.addEventListener('click', () => {
+        inputForm?.querySelectorAll('input:not([type="hidden"])').forEach((input) => {
+            input.value = ['other_cost', 'pool_fee'].includes(input.id) ? '0' : '';
+            input.dataset.pendingValue = input.value;
+        });
+        if (coinSelect) {
+            coinSelect.value = '';
+            coinSelect.dataset.selectedCoin = '';
+            coinSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        [hashrateUnitSelect, networkHashrateUnitSelect].forEach((select) => {
+            if (select) select.dataset.selectedUnit = '';
+        });
+        resetMarketApiValues();
+        setMarketStatus('');
+        updateInputMonitor();
+    });
     if (inputForm) {
         inputForm.addEventListener('submit', () => {
             decimalInputs.forEach((input) => normalizeOnBlur(input));

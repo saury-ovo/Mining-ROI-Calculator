@@ -24,6 +24,34 @@ def make_form(coin, hashrate, hashrate_unit, network_hashrate, network_hashrate_
 
 
 class CalculatorTests(unittest.TestCase):
+    def test_custom_coin_uses_manual_name_and_algorithm_without_changing_roi_math(self):
+        result = calculate_roi({
+            **make_form("CUSTOM", 1, "TH/s", 1, "PH/s", 200, 65000),
+            "custom_name": "Handshake-like test",
+            "algorithm": "CustomHash",
+        })
+
+        expected_share = 0.001 / 1.001
+        self.assertEqual(result["coin"], "CUSTOM")
+        self.assertEqual(result["custom_name"], "Handshake-like test")
+        self.assertEqual(result["algorithm"], "CustomHash")
+        self.assertAlmostEqual(result["daily_revenue"], 200 * expected_share * 65000)
+
+    def test_custom_coin_defaults_name_and_allows_empty_algorithm(self):
+        result = calculate_roi(make_form("CUSTOM", 1, "H/s", 1000, "H/s", 10, 2))
+
+        self.assertEqual(result["custom_name"], "CUSTOM")
+        self.assertEqual(result["algorithm"], "")
+
+    def test_custom_coin_requires_manual_market_values(self):
+        base_form = make_form("CUSTOM", 1, "TH/s", 1, "PH/s", 200, 65000)
+        for field in ("network_hashrate", "network_daily_coin_production", "coin_price"):
+            with self.subTest(field=field):
+                form = dict(base_form)
+                form.pop(field)
+                with self.assertRaises(CalculatorError):
+                    calculate_roi(form)
+
     def test_hashrate_units_convert_to_base_units(self):
         expected = {
             "H/s": 1, "kH/s": 10**3, "MH/s": 10**6,

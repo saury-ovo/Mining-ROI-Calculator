@@ -18,6 +18,14 @@ class CalculatorError(ValueError):
 
 
 COIN_CONFIG = {
+    "CUSTOM": {
+        "key": "custom",
+        "ticker": "CUSTOM",
+        "algorithm": "",
+        "base_unit": "H/s",
+        "hash_unit": ["H/s", "kH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s", "Sol/s", "kSol/s", "MSol/s", "GSol/s"],
+        "network_hash_unit": ["H/s", "kH/s", "MH/s", "GH/s", "TH/s", "PH/s", "EH/s", "Sol/s", "kSol/s", "MSol/s", "GSol/s"],
+    },
     "BTC": {
         "key": "btc",
         "ticker": "BTC",
@@ -210,7 +218,11 @@ def calculate_roi(form_data):
         raise CalculatorError("Please select a supported coin.")
 
     coin_settings = COIN_CONFIG[coin]
-    algorithm = coin_settings["algorithm"]
+    is_custom_coin = coin == "CUSTOM"
+    algorithm = _text(form_data, "algorithm") if is_custom_coin else coin_settings["algorithm"]
+    custom_name = _text(form_data, "custom_name") if is_custom_coin else ""
+    if is_custom_coin and not custom_name:
+        custom_name = "CUSTOM"
     hashrate = _hashrate(form_data, "hashrate", "Hashrate", coin_settings["hash_unit"])
     network_hashrate = _hashrate(
         form_data,
@@ -302,6 +314,7 @@ def calculate_roi(form_data):
 
     return {
         "coin": coin,
+        "custom_name": custom_name,
         "algorithm": algorithm,
         "hashrate_value": hashrate["value"],
         "hashrate_unit": hashrate["unit"],

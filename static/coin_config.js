@@ -48,6 +48,12 @@ window.COIN_CONFIG = {
         ticker: 'IRONFISH', key: 'ironfish', name: 'IRONFISH', icon: '', algorithm: 'FishHash',
         hash_unit: ['MH/s', 'GH/s', 'TH/s'], network_hash_unit: ['MH/s', 'GH/s', 'TH/s'],
     },
+    CUSTOM: {
+        ticker: 'CUSTOM', key: 'custom', name: 'Custom', labelKey: 'coin.custom', icon: '', algorithm: '',
+        hash_unit: ['H/s', 'kH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s', 'Sol/s', 'kSol/s', 'MSol/s', 'GSol/s'],
+        network_hash_unit: ['H/s', 'kH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s', 'Sol/s', 'kSol/s', 'MSol/s', 'GSol/s'],
+        isCustom: true,
+    },
 };
 
 window.CoinConfig = window.COIN_CONFIG;

@@ -44,7 +44,7 @@
                 </div>
                 <p class="intro-copy" data-i18n="result.introCopy">A performance snapshot for your {{ data.get('quantity') }}-unit deployment.</p>
             </div>
-            <a href="{{ url_for('index') }}" class="btn btn-outline-light edit-btn"><i class="bi bi-sliders2"></i> <span data-i18n="common.editAssumptions">Edit assumptions</span></a>
+            <a href="{{ url_for('index') }}?{{ data|form_query }}" class="btn btn-outline-light edit-btn"><i class="bi bi-sliders2"></i> <span data-i18n="common.editAssumptions">Edit assumptions</span></a>
         </section>
 
         {% if results['unrealistic_input'] %}
@@ -52,7 +52,7 @@
         {% endif %}
 
         <section class="asset-strip">
-            <div><span data-i18n="fields.coin">COIN</span><strong>{{ results['coin'] }}</strong></div>
+            <div><span data-i18n="fields.coin">COIN</span><strong id="result-coin-name" class="custom-coin-label" data-default-coin="{{ results['coin'] }}" data-custom-name="{{ data.get('custom_name', '') if results['coin'] == 'CUSTOM' else '' }}">{{ results.get('custom_name') if results['coin'] == 'CUSTOM' and results.get('custom_name') else results['coin'] }}</strong></div>
             <div><span data-i18n="fields.algorithm">ALGORITHM</span><strong>{{ results['algorithm'] }}</strong></div>
             <div><span data-i18n="fields.hashrate">HASHRATE</span><strong>{% if results['hashrate_value'] is not none %}{{ '%.6g'|format(results['hashrate_value']) }} {{ results['hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
             <div><span data-i18n="fields.networkHashrate">NETWORK HASHRATE</span><strong>{% if results['network_hashrate_value'] is not none %}{{ '%.6g'|format(results['network_hashrate_value']) }} {{ results['network_hashrate_unit'] }}{% else %}-{% endif %}</strong></div>
@@ -94,13 +94,13 @@
         <section class="calculation-details">
             <div class="section-label"><span data-i18n="result.calculationDetails">CALCULATION DETAILS</span><span class="section-rule"></span><span class="section-context" data-i18n="result.auditTrail">AUDIT TRAIL</span></div>
             <div class="calculation-grid">
-                <div><span data-i18n="result.networkDailyProduction">Network Daily Production</span><strong>{{ '%.8f'|format(results['network_daily_coin_production']) }} {{ results['coin'] }}/day</strong></div>
+                <div><span data-i18n="result.networkDailyProduction">Network Daily Production</span><strong>{{ '%.8f'|format(results['network_daily_coin_production']) }} <span class="custom-coin-label" data-default-coin="{{ results['coin'] }}" data-custom-name="{{ data.get('custom_name', '') }}">{{ results['coin'] }}</span><span data-i18n="units.perDay">/ day</span></strong></div>
                 <div><span data-i18n="result.miningShare">Mining Share</span><strong>{{ '%.4f'|format(results['mining_share_percent']) }}%</strong></div>
-                <div><span>Original Network Hashrate</span><strong>{{ '%.6g'|format(results['original_network_hashrate_value']) }} {{ results['original_network_hashrate_unit'] }}</strong></div>
-                <div><span>My Total Hashrate</span><strong>{{ '%.6g'|format(results['miner_total_hashrate_value']) }} {{ results['miner_total_hashrate_unit'] }}</strong></div>
-                <div><span>Effective Network Hashrate</span><strong>{{ '%.6g'|format(results['effective_network_hashrate_value']) }} {{ results['effective_network_hashrate_unit'] }}</strong></div>
-                <div><span>Actual Miner Share</span><strong>{{ '%.6f'|format(results['hashrate_share'] * 100) }}%</strong></div>
-                <div><span data-i18n="result.estimatedDailyCoin">Estimated Daily Coin</span><strong>{{ '%.8f'|format(results['estimated_daily_coin']) }} {{ results['coin'] }}/day</strong></div>
+                <div><span data-i18n="result.originalNetworkHashrate">Original Network Hashrate</span><strong>{{ '%.6g'|format(results['original_network_hashrate_value']) }} {{ results['original_network_hashrate_unit'] }}</strong></div>
+                <div><span data-i18n="result.minerTotalHashrate">My Total Hashrate</span><strong>{{ '%.6g'|format(results['miner_total_hashrate_value']) }} {{ results['miner_total_hashrate_unit'] }}</strong></div>
+                <div><span data-i18n="result.effectiveNetworkHashrate">Effective Network Hashrate</span><strong>{{ '%.6g'|format(results['effective_network_hashrate_value']) }} {{ results['effective_network_hashrate_unit'] }}</strong></div>
+                <div><span data-i18n="result.actualMinerShare">Actual Miner Share</span><strong>{{ '%.6f'|format(results['hashrate_share'] * 100) }}%</strong></div>
+                <div><span data-i18n="result.estimatedDailyCoin">Estimated Daily Coin</span><strong>{{ '%.8f'|format(results['estimated_daily_coin']) }} <span class="custom-coin-label" data-default-coin="{{ results['coin'] }}" data-custom-name="{{ data.get('custom_name', '') }}">{{ results['coin'] }}</span><span data-i18n="units.perDay">/ day</span></strong></div>
                 <div><span data-i18n="result.coinPriceDetail">Coin price</span><strong>${{ '{:,.2f}'.format(results['coin_price']) }}</strong></div>
                 <div class="calculation-formula"><span data-i18n="result.revenueFormula">total coin x price</span></div>
             </div>
@@ -111,7 +111,7 @@
 
     <script id="chart-data" type="application/json">{{ {'revenue': results['daily_revenue'], 'electricity': results['daily_electricity_cost']}|tojson }}</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-    <script src="{{ url_for('static', filename='translations.js') }}?v=ui-20260806-4"></script>
-    <script src="{{ url_for('static', filename='script.js') }}?v=ui-20260806-8"></script>
+    <script src="{{ url_for('static', filename='translations.js') }}?v=custom-20260813-1"></script>
+    <script src="{{ url_for('static', filename='script.js') }}?v=custom-20260813-1"></script>
 </body>
 </html>

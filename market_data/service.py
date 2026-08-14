@@ -56,6 +56,13 @@ def _load_field(fields, warnings, name, loader):
 def get_market_data(coin):
     """Return a stable JSON-ready payload for a supported ticker."""
     ticker = str(coin or "").strip().upper()
+    if ticker == "CUSTOM":
+        return {
+            "coin": ticker,
+            "fields": {},
+            "warnings": ["custom coin: enter market data manually"],
+            "fetched_at": _fetched_at(),
+        }
     config = get_market_config(ticker)
     if config is None:
         return {"coin": ticker, "fields": {}, "warnings": ["unsupported coin"], "fetched_at": _fetched_at()}
